@@ -34,15 +34,15 @@
     (putprop 'canoesq 10 'altura)
     (putprop 'canoesq 20 'amplada)
     (putprop 'canoesq (numero-aleatori 
-        (/ (get 'campesq 'amplada) 3) 
-        (* (/ (get 'campesq 'amplada) 3) 2)) 'posicio))
+           (floor (/ (get 'campesq 'amplada) 3))
+           (* (floor (/ (get 'campesq 'amplada) 3)) 2)) 'posicio))
 
 (defun inici-canodret ()
     (putprop 'canodr 10 'altura)
     (putprop 'canodr 20 'amplada)
     (putprop 'canodr (numero-aleatori 
-        (/ (get 'campdr 'amplada) 3) 
-        (* (/ (get 'campesq 'amplada) 3) 2)) 'posicio))
+           (floor (/ (get 'campdr 'amplada) 3))
+           (* (floor (/ (get 'campdr 'amplada) 3)) 2)) 'posicio))
 
 (defun pinta ()
     (cls)
@@ -70,9 +70,16 @@
         (get 'campdr 'altura))
     (draw (get 'camp 'amplada) (get 'campdr 'altura)))
 
-(defun pinta-canons ()
+(defun pinta-canons()
     (color 0 0 0)
-    (move (get 'canodr 'posicio) (get 'camapesq 'altura))
+    ;cano esquerre
+    (rectangle (get 'canoesq 'posicio) (get 'campesq 'altura) 
+        (get 'canoesq 'amplada) (get 'canoesq 'altura))
+    ;cano dret
+    (rectangle (+ (get 'canodr 'posicio) 
+    (+ (get 'campesq 'amplada) (get 'mur 'amplada))) 
+        (get 'campdr 'altura) (get 'canodr 'amplada) 
+        (get 'canodr 'altura))
 )
 
 
