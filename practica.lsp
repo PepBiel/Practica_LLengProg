@@ -174,6 +174,31 @@
     (inc-temps)
 )
 
+(defun dibuixar ()
+    (cercle (get 'bala 'X) (get 'bala 'Y) 5 100)
+)
+
+(defun cercle (x y radi segments)
+    (mover (+ x radi) y)
+    (cercle2 x y radi (/ 360 segments) 0))
+
+(defun cercle2 (x y radi pas angle)
+  (cond ((< angle 360)
+         (drawr (+ x (* radi (cos (radians (+ angle pas)))))
+                (+ y (* radi (sin (radians (+ angle pas))))))
+         (cercle2 x y radi pas (+ angle pas)))
+        (t t)))
+
+(defun mover (x y)
+  "mou a les coordenades arrodonides"
+  (move (round x) 
+        (round y)))
+
+(defun drawr (x y)
+  "pinta a les coordenades arrodonides"
+  (draw (round x) 
+        (round y)))
+
 (defun aturada ()
     (bucle) ;DE MOMENT NO S'ATURA
 )
@@ -202,7 +227,7 @@
     
 
 (defun calc-vely ()
-    (+ (get 'bala 'vely) (* (get 'bala 'acceleracio) 
+    (+ (get 'bala 'viy) (* (get 'bala 'acceleracio) 
     (get 'bala 'temps)))
 )
 
@@ -217,7 +242,7 @@
 )
 
 (defun calc-posy ()
-    (+ (get 'bala 'Y) (* (get 'bala 'vely) 
+    (+ (get 'bala 'Y) (* (get 'bala 'viy) 
         (get 'bala 'temps)) 
     (* 0.5 (get 'bala 'acceleracio) 
         (* (get 'bala 'temps) (get 'bala 'temps))))
