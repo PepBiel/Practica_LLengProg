@@ -165,22 +165,61 @@
 (defun bucle ()
     (calcular)
     (dibuixar)
-    (aturada))
+    (aturada)
+)
 
 (defun calcular ()
     (calc-vel)
     (calc-pos)
+    (inc-temps)
+)
+
+(defun aturada ()
+    (bucle) ;DE MOMENT NO S'ATURA
+)
+
+(defun inc-temps ()
+    (putprop 'bala (+ (get 'bala 'temps) 5) 'temps)
 )
 
 (defun ini-bala ()
-    (putprop 'bala (* (get 'canoesq 'potencia) (cos (get 'canoesq 'angle))) 'vix)
-    (putprop 'bala (* (get 'canoesq 'potencia) (sin (get 'canoesq 'angle))) 'viy)
+    (putprop 'bala (* (get 'canoesq 'potencia) 
+        (cos (get 'canoesq 'angle))) 'vix)
+
+    (putprop 'bala (* (get 'canoesq 'potencia) 
+        (sin (get 'canoesq 'angle))) 'viy)
+        
     (putprop 'bala -9.8 'acceleracio)
     (putprop 'bala 0 'temps)
+    (putprop 'bala 0 'X) ;punta vector x
+    (putprop 'bala 0 'Y) ;punta vecetor y
 )
 
+(defun calc-vel ()
+    (putprop 'bala (get 'bala 'vix) 'vix)
+    (putprop 'bala (calc-vely) 'viy)
+)
+    
 
+(defun calc-vely ()
+    (+ (get 'bala 'vely) (* (get 'bala 'acceleracio) 
+    (get 'bala 'temps)))
+)
 
-(defun calc-vel ())
+(defun calc-pos ()
+    (putprop 'bala (calc-posx) 'X)
+    (putprop 'bala (calc-posy) 'Y)
+)
 
-(defun calc-pos ())
+(defun calc-posx ()
+    (+ (get 'bala 'X) (* (get 'bala 'vix) 
+    (get 'bala 'temps)))
+)
+
+(defun calc-posy ()
+    (+ (get 'bala 'Y) (* (get 'bala 'vely) 
+        (get 'bala 'temps)) 
+    (* 0.5 (get 'bala 'acceleracio) 
+        (* (get 'bala 'temps) (get 'bala 'temps))))
+)
+
