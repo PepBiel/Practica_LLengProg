@@ -35,14 +35,20 @@
     (putprop 'canoesq 20 'amplada)
     (putprop 'canoesq (numero-aleatori 
            (floor (/ (get 'campesq 'amplada) 3))
-           (* (floor (/ (get 'campesq 'amplada) 3)) 2)) 'posicio))
+           (- (* (floor (/ (get 'campesq 'amplada) 3)) 2) 
+           (get 'canoesq 'amplada))) 'posicio)
+    (putprop 'canoesq 45 'angle)
+    (putprop 'canoesq 20 'potencia))
 
 (defun inici-canodret ()
     (putprop 'canodr 10 'altura)
     (putprop 'canodr 20 'amplada)
     (putprop 'canodr (numero-aleatori 
            (floor (/ (get 'campdr 'amplada) 3))
-           (* (floor (/ (get 'campdr 'amplada) 3)) 2)) 'posicio))
+           (- (* (floor (/ (get 'campdr 'amplada) 3)) 2) 
+           (get 'canodr 'amplada))) 'posicio)
+    (putprop 'canodr 135 'angle)
+    (putprop 'canodr 20 'potencia))
 
 (defun pinta ()
     (cls)
@@ -75,11 +81,18 @@
     ;cano esquerre
     (rectangle (get 'canoesq 'posicio) (get 'campesq 'altura) 
         (get 'canoesq 'amplada) (get 'canoesq 'altura))
+    (angle (+ (get 'canoesq 'posicio) (floor (get 'canoesq 'amplada) 2)) 
+        (+ (get 'campesq 'altura) (get 'canoesq 'altura)) 
+        15 (get 'canoesq 'angle))
     ;cano dret
     (rectangle (+ (get 'canodr 'posicio) 
     (+ (get 'campesq 'amplada) (get 'mur 'amplada))) 
         (get 'campdr 'altura) (get 'canodr 'amplada) 
         (get 'canodr 'altura))
+    (angle (+ (+ (get 'canodr 'posicio) (floor (get 'canodr 'amplada) 2)) 
+        (+ (get 'campesq 'amplada) (get 'mur 'amplada))) 
+        (+ (get 'campdr 'altura) (get 'canodr 'altura)) 
+        15 (get 'canodr 'angle))
 )
 
 
@@ -94,18 +107,48 @@
     (+ minim (random (+ 1 (- maxim minim)))))
 
 ; sumam 1 a l'amplada del camp, li restam el mur, ho dividim entre 2 i li restam la diferència dividida entre 2
-;(defun generar-campesq ()
-;    (- (/ (- (+ (get 'camp 'amplada) 1) (get 'mur 'amplada)) 2) 
-;        (/ (get 'camp 'diferencia) 2)))
-
 (defun generar-campesq ()
-    (let ((resultado (- (/ (- (+ (get 'camp 'amplada) 1) 
-        (get 'mur 'amplada)) 2) (/ (get 'camp 'diferencia) 2))))
-            (floor resultado))) ; Redondear hacia abajo para asegurar un número entero
+    (- (floor (- (+ (get 'camp 'amplada) 1) (get 'mur 'amplada)) 2) 
+        (floor (get 'camp 'diferencia) 2)))
+
+;(defun generar-campesq ()
+;    (let ((resultado (- (/ (- (+ (get 'camp 'amplada) 1) 
+;        (get 'mur 'amplada)) 2) (/ (get 'camp 'diferencia) 2))))
+;            (floor resultado))) ; Redondear hacia abajo para asegurar un número entero
 
 
 ; sumam 1 a l'amplada del camp, li restam el mur, ho dividim entre 2 i li sumam la diferència dividida entre 2
 ;se pot eliminar ja que per dibuixar no ho utilitzam
 (defun generar-campdret ()
-    (+ (/ (- (+ (get 'camp 'amplada) 1) (get 'mur 'amplada)) 2) 
-        (/ (get 'camp 'diferencia) 2)))
+    (+ (floor (- (+ (get 'camp 'amplada) 1) (get 'mur 'amplada)) 2) 
+        (floor (get 'camp 'diferencia) 2)))
+
+
+(defun inc-angle-canoesq ()
+    "incrementa l'angle"
+    (putprop 'canoesq (+ (get 'canoesq 'angle) 1) 'angle))
+
+(defun dec-angle-canoesq ()
+    "decrementa l'angle"
+    (putprop 'canoesq (- (get 'canoesq 'angle) 1) 'angle))
+
+(defun inc-angle-canodr ()
+    "incrementa l'angle"
+    (putprop 'canoesq (+ (get 'canodr 'angle) 1) 'angle))
+
+(defun dec-angle-canodr ()
+    "decrementa l'angle"
+    (putprop 'canoesq (- (get 'canodr 'angle) 1) 'angle))
+
+(defun angle (x y r angle)
+    (move x y)
+    (drawr (+ x (* r (cos (radians angle))))
+           (+ y (* r (sin (radians angle))))))
+
+(defun radians (graus)
+  (/ (* graus (* 2 pi)) 360))
+
+(defun drawr (x y)
+  "pinta a les coordenades arrodonides"
+  (draw (round x) 
+        (round y)))
