@@ -152,3 +152,35 @@
   "pinta a les coordenades arrodonides"
   (draw (round x) 
         (round y)))
+
+;1. vix i viy (velocitats inicials) NO RECURSIU
+;2. Entrar bucle recursiu 
+;3. Calcula -> velocitats (depen de les anteriors) i posicions (depen de les anteriors)
+;4. Dibuixa -> segons posicions bala
+;5. Mirar aturada -> si no colisiona tornar a 2 si coliona sortir.
+(defun dispara-cano ()
+    (ini-bala)
+    (bucle))
+
+(defun bucle ()
+    (calcular)
+    (dibuixar)
+    (aturada))
+
+(defun calcular ()
+    (calc-vel)
+    (calc-pos)
+)
+
+(defun ini-bala ()
+    (putprop 'bala (* (get 'canoesq 'potencia) (cos (get 'canoesq 'angle))) 'vix)
+    (putprop 'bala (* (get 'canoesq 'potencia) (sin (get 'canoesq 'angle))) 'viy)
+    (putprop 'bala -9.8 'acceleracio)
+    (putprop 'bala 0 'temps)
+)
+
+
+
+(defun calc-vel ())
+
+(defun calc-pos ())
