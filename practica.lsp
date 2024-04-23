@@ -1,7 +1,13 @@
+;************************ PRÀCTICA LISP ***********************
+
+;********************* INICIALITZACIONS *************************
+
+; FUNCIÓ INICIAL
 (defun inici ()
     (inici-objectes)
     (repeteix))
 
+; INICIALITZACIÓ D'OBJECTES
 (defun inici-objectes ()
     (inici-camp)
     (inici-mur)
@@ -11,25 +17,42 @@
     (inici-canodret)
 )
 
-;Posam aquests valors perque es vegi la línea del camp, però realment el camp és de 340x640
+; INICIALITZAM CAMP
 (defun inici-camp ()
+    ; Posam aquests valors perque es vegi la línea del camp, però realment el camp és de 340x640
     (putprop 'camp 339 'altura)
     (putprop 'camp 639 'amplada)
     (putprop 'camp (numero-aleatori 0 40) 'diferencia))
 
-; inicialitzam valors aleatoris del mur
+; INIZIALITZAM VALORS ALEATORIS PER EL MUR CENTRAL
 (defun inici-mur ()
     (putprop 'mur (numero-aleatori 100 150) 'altura)
     (putprop 'mur (numero-aleatori 20 40) 'amplada))
 
+; INICIALITZACIÓ DEL CAMP ESQUERRE
 (defun inici-campesquerre ()
     (putprop 'campesq (numero-aleatori 15 45) 'altura)
     (putprop 'campesq (generar-campesq) 'amplada))
 
+; DETERMINAM L'AMPLADA DEL CAMP ESQUERRE
+(defun generar-campesq ()
+    ; sumam 1 a l'amplada del camp, li restam el mur, ho dividim entre 2 i li restam la diferència dividida entre 2
+    (- (floor (- (+ (get 'camp 'amplada) 1) (get 'mur 'amplada)) 2) 
+        (floor (get 'camp 'diferencia) 2)))
+
+; INICIALITZACIÓ DEL CAMP DRET
 (defun inici-campdret ()
     (putprop 'campdr (numero-aleatori 15 45) 'altura)
     (putprop 'campdr (generar-campdret) 'amplada))
 
+; DETERMINAM L'AMPLADA DEL CAMP DRET
+; sumam 1 a l'amplada del camp, li restam el mur, ho dividim entre 2 i li sumam la diferència dividida entre 2
+; se pot eliminar ja que per dibuixar no ho utilitzam
+(defun generar-campdret ()
+    (+ (floor (- (+ (get 'camp 'amplada) 1) (get 'mur 'amplada)) 2) 
+        (floor (get 'camp 'diferencia) 2)))
+
+; INICIALITZAM EL CANÓ ESQUERRE
 (defun inici-canoesquerr ()
     (putprop 'canoesq 10 'altura)
     (putprop 'canoesq 20 'amplada)
@@ -39,9 +62,10 @@
            (get 'canoesq 'amplada))) 'posicio)
     (putprop 'canoesq 45 'angle)
     (putprop 'canoesq 20 'potencia)
-    (putprop 'canoesq 0 'X)
-    (putprop 'canoesq 0 'Y))
+    (putprop 'canoesq 0 'X) ; posició en X de la punta final del canó
+    (putprop 'canoesq 0 'Y)) ; posició en Y de la punta final del canó
 
+; INICIALITZAM EL CANÓ DRET
 (defun inici-canodret ()
     (putprop 'canodr 10 'altura)
     (putprop 'canodr 20 'amplada)
@@ -54,50 +78,71 @@
     (putprop 'canodr 0 'X)
     (putprop 'canodr 0 'Y))
 
+;************************ PINTAM ************************************
+
+; FUNCIÓ PRINCIPAL PER PINTAR
 (defun pinta ()
-    (cls)
+    (cls)   ; natejam la pantalla
     (pinta-camp)
     (pinta-mur)
     (pinta-camps)
     (pinta-canons)
 )
 
+; PINTAM CAMP PRINCIPAL
 (defun pinta-camp()
     (color 0 0 0)
     (rectangle 0 0 (get 'camp 'amplada) (get 'camp 'altura))
 )
 
+; PINTA MUR
 (defun pinta-mur()
     (color 205 133 63)
     (rectangle (get 'campesq 'amplada) 0 (get 'mur 'amplada)
          (get 'mur 'altura)))
 
+; CRIDAM A LES FUNCIONS DE PINTAR CAMPS
 (defun pinta-camps()
-    (color 0 143 57)
+    (color 0 143 57)    ; color verd
+    (pinta-campesquerre)
+    (pinta-campdret))
+
+; PINTAM CAMP ESQUERRE
+(defun pinta-campesquerre ()
     (move 0 (get 'campesq 'altura))
-    (draw (get 'campesq 'amplada) (get 'campesq 'altura))
+    (draw (get 'campesq 'amplada) (get 'campesq 'altura)))
+
+; PINTAM CAMP DRET
+(defun pinta-campdret ()
     (move (+ (get 'mur 'amplada) (get 'campesq 'amplada)) 
         (get 'campdr 'altura))
     (draw (get 'camp 'amplada) (get 'campdr 'altura)))
 
+; CRIDAM A LES FUNCIONS PER PINTAR CANONS
 (defun pinta-canons()
-    (color 0 0 0)
-    ;cano esquerre
+    (color 0 0 0)   ; color  negre
+    (pinta-canoesquerre)
+    (pinta-canodret)
+)
+
+; PINTAM CANÓ ESQUERRE
+(defun pinta-canoesquerre ()
     (rectangle (get 'canoesq 'posicio) (get 'campesq 'altura) 
         (get 'canoesq 'amplada) (get 'canoesq 'altura))
     (angle (+ (get 'canoesq 'posicio) (floor (get 'canoesq 'amplada) 2)) 
         (+ (get 'campesq 'altura) (get 'canoesq 'altura)) 
-        (get 'canoesq 'potencia) (get 'canoesq 'angle) 1)
-    ;cano dret
+        (get 'canoesq 'potencia) (get 'canoesq 'angle) 1))
+
+; PINTAM CANÓ DRET
+(defun pinta-canodret ()
     (rectangle (+ (get 'canodr 'posicio) 
-    (+ (get 'campesq 'amplada) (get 'mur 'amplada))) 
+        (+ (get 'campesq 'amplada) (get 'mur 'amplada))) 
         (get 'campdr 'altura) (get 'canodr 'amplada) 
         (get 'canodr 'altura))
     (angle (+ (+ (get 'canodr 'posicio) (floor (get 'canodr 'amplada) 2)) 
         (+ (get 'campesq 'amplada) (get 'mur 'amplada))) 
         (+ (get 'campdr 'altura) (get 'canodr 'altura)) 
-        (get 'canodr 'potencia) (get 'canodr 'angle) 0)
-)
+        (get 'canodr 'potencia) (get 'canodr 'angle) 0))
 
 (defun repeteix ()
     (pinta)
@@ -144,24 +189,6 @@
 
 (defun numero-aleatori (minim maxim)
     (+ minim (random (+ 1 (- maxim minim)))))
-
-; sumam 1 a l'amplada del camp, li restam el mur, ho dividim entre 2 i li restam la diferència dividida entre 2
-(defun generar-campesq ()
-    (- (floor (- (+ (get 'camp 'amplada) 1) (get 'mur 'amplada)) 2) 
-        (floor (get 'camp 'diferencia) 2)))
-
-;(defun generar-campesq ()
-;    (let ((resultado (- (/ (- (+ (get 'camp 'amplada) 1) 
-;        (get 'mur 'amplada)) 2) (/ (get 'camp 'diferencia) 2))))
-;            (floor resultado))) ; Redondear hacia abajo para asegurar un número entero
-
-
-; sumam 1 a l'amplada del camp, li restam el mur, ho dividim entre 2 i li sumam la diferència dividida entre 2
-;se pot eliminar ja que per dibuixar no ho utilitzam
-(defun generar-campdret ()
-    (+ (floor (- (+ (get 'camp 'amplada) 1) (get 'mur 'amplada)) 2) 
-        (floor (get 'camp 'diferencia) 2)))
-
 
 (defun inc-angle-canoesq ()
     "incrementa l'angle"
