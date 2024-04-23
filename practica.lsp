@@ -87,7 +87,7 @@
         (get 'canoesq 'amplada) (get 'canoesq 'altura))
     (angle (+ (get 'canoesq 'posicio) (floor (get 'canoesq 'amplada) 2)) 
         (+ (get 'campesq 'altura) (get 'canoesq 'altura)) 
-        15 (get 'canoesq 'angle) 1)
+        (get 'canoesq 'potencia) (get 'canoesq 'angle) 1)
     ;cano dret
     (rectangle (+ (get 'canodr 'posicio) 
     (+ (get 'campesq 'amplada) (get 'mur 'amplada))) 
@@ -96,7 +96,7 @@
     (angle (+ (+ (get 'canodr 'posicio) (floor (get 'canodr 'amplada) 2)) 
         (+ (get 'campesq 'amplada) (get 'mur 'amplada))) 
         (+ (get 'campdr 'altura) (get 'canodr 'altura)) 
-        15 (get 'canodr 'angle) 0)
+        (get 'canodr 'potencia) (get 'canodr 'angle) 0)
 )
 
 (defun repeteix ()
@@ -112,6 +112,12 @@
                 (inc-angle-canodr) (repeteix)) ; incrementa angle cano dret i repeteix
             ((equal tecla 107) ; Pitja k
                 (dec-angle-canodr) (repeteix)) ; decrementa angle cano dret i repeteix
+            ((equal tecla 102) ; Pitja f
+                (dispara-cano) (repeteix)) ; dispara
+            ((equal tecla 101) ; Pitja e
+                (aug-potencia) (repeteix))
+            ((equal tecla 113) ; Pitja q
+                (dis-potencia) (repeteix))
           ((equal tecla 27)  ; ESC
            "Gràcies per jugar")                      ; acaba recursió
           (t                 ; altrament
@@ -159,6 +165,7 @@
 
 (defun inc-angle-canoesq ()
     "incrementa l'angle"
+    (print (get 'canoesq 'angle))
     (putprop 'canoesq (+ (get 'canoesq 'angle) 1) 'angle))
 
 (defun dec-angle-canoesq ()
@@ -172,6 +179,14 @@
 (defun dec-angle-canodr ()
     "incrementa l'angle"
     (putprop 'canodr (+ (get 'canodr 'angle) 1) 'angle))
+
+(defun aug-potencia ()
+    "incrementa l'angle"
+    (putprop 'canoesq (+ (get 'canoesq 'potencia) 1) 'potencia))
+
+(defun dis-potencia ()
+    "incrementa l'angle"
+    (putprop 'canoesq (- (get 'canoesq 'potencia) 1) 'potencia))
 
 ;(defun angle (x y r angle)
 ;    (move x y)
@@ -219,13 +234,16 @@
 )
 
 (defun calcular ()
+    ;(trace calc-vel)
+    ;(untrace calc-vel)
     (calc-vel)
     (calc-pos)
     (inc-temps)
 )
 
 (defun dibuixar ()
-    (cercle (get 'bala 'X) (get 'bala 'Y) 5 100)
+    (cercle (get 'bala 'X) (get 'bala 'Y) 
+        (get 'bala 'radi) 100)
 )
 
 (defun cercle (x y radi segments)
@@ -254,24 +272,27 @@
 )
 
 (defun inc-temps ()
-    (putprop 'bala (+ (get 'bala 'temps) 5) 'temps)
+    (putprop 'bala (+ (get 'bala 'temps) 0.1) 'temps)
 )
 
 (defun ini-bala ()
     (putprop 'bala (* (get 'canoesq 'potencia) 
-        (cos (get 'canoesq 'angle))) 'vix)
+        (cos (* (get 'canoesq 'angle) (/ pi 180)))) 'vix)
 
     (putprop 'bala (* (get 'canoesq 'potencia) 
-        (sin (get 'canoesq 'angle))) 'viy)
+        (sin (* (get 'canoesq 'angle) (/ pi 180)))) 'viy)
         
     (putprop 'bala -9.8 'acceleracio)
     (putprop 'bala 0 'temps)
-    (putprop 'bala 0 'X) ;punta vector x
-    (putprop 'bala 0 'Y) ;punta vecetor y
+    (putprop 'bala (get 'canoesq 'X) 'X) ;punta vector x
+    (putprop 'bala (get 'canoesq 'Y) 'Y) ;punta vecetor y
+    (putprop 'bala 5 'radi)
 )
 
 (defun calc-vel ()
+    ;(print (get 'bala 'vix))
     (putprop 'bala (get 'bala 'vix) 'vix)
+    ;(print (calc-vely))
     (putprop 'bala (calc-vely) 'viy)
 )
     
