@@ -310,9 +310,9 @@
         (round y)))
 
 (defun aturada ()
-    (cond (> (+ (get 'bala 'Y) (get 'bala 'radi)) 
-                (get 'campdret 'altura)) (bucle))
-    
+    (cond ((> (+ (get 'bala 'Y) (get 'bala 'radi)) 
+          (get 'campdr 'altura))
+       (bucle)))    
 )
 
 (defun inc-temps ()
