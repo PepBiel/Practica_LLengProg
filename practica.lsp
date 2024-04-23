@@ -38,7 +38,9 @@
            (- (* (floor (/ (get 'campesq 'amplada) 3)) 2) 
            (get 'canoesq 'amplada))) 'posicio)
     (putprop 'canoesq 45 'angle)
-    (putprop 'canoesq 20 'potencia))
+    (putprop 'canoesq 20 'potencia)
+    (putprop 'canoesq 0 'X)
+    (putprop 'canoesq 0 'Y))
 
 (defun inici-canodret ()
     (putprop 'canodr 10 'altura)
@@ -48,7 +50,9 @@
            (- (* (floor (/ (get 'campdr 'amplada) 3)) 2) 
            (get 'canodr 'amplada))) 'posicio)
     (putprop 'canodr 135 'angle)
-    (putprop 'canodr 20 'potencia))
+    (putprop 'canodr 20 'potencia)
+    (putprop 'canodr 0 'X)
+    (putprop 'canodr 0 'Y))
 
 (defun pinta ()
     (cls)
@@ -83,7 +87,7 @@
         (get 'canoesq 'amplada) (get 'canoesq 'altura))
     (angle (+ (get 'canoesq 'posicio) (floor (get 'canoesq 'amplada) 2)) 
         (+ (get 'campesq 'altura) (get 'canoesq 'altura)) 
-        15 (get 'canoesq 'angle))
+        15 (get 'canoesq 'angle) 1)
     ;cano dret
     (rectangle (+ (get 'canodr 'posicio) 
     (+ (get 'campesq 'amplada) (get 'mur 'amplada))) 
@@ -92,7 +96,7 @@
     (angle (+ (+ (get 'canodr 'posicio) (floor (get 'canodr 'amplada) 2)) 
         (+ (get 'campesq 'amplada) (get 'mur 'amplada))) 
         (+ (get 'campdr 'altura) (get 'canodr 'altura)) 
-        15 (get 'canodr 'angle))
+        15 (get 'canodr 'angle) 0)
 )
 
 
@@ -140,10 +144,27 @@
     "decrementa l'angle"
     (putprop 'canoesq (- (get 'canodr 'angle) 1) 'angle))
 
-(defun angle (x y r angle)
-    (move x y)
-    (drawr (+ x (* r (cos (radians angle))))
-           (+ y (* r (sin (radians angle))))))
+;(defun angle (x y r angle)
+;    (move x y)
+;    (drawr (+ x (* r (cos (radians angle))))
+;           (+ y (* r (sin (radians angle))))))
+
+(defun angle (x y r angle mode)
+  (cond
+    ((= mode 1) ; Si es el cano esquerre
+        (move x y)
+        (putprop 'canoesq (+ x (* r (cos (radians angle)))) 'X)
+        (putprop 'canoesq (+ y (* r (sin (radians angle)))) 'Y)
+        (drawr (get 'canoesq 'X) (get 'canoesq 'Y)))
+
+    ((= mode 0) ; Si es el cano dret
+        (move x y)
+        (putprop 'canodr (+ x (* r (cos (radians angle)))) 'X)
+        (putprop 'canodr (+ y (* r (sin (radians angle)))) 'Y)
+        (drawr (get 'canodr 'X) (get 'canodr 'Y)))
+    (t
+     (format t "Modo no reconocido."))
+  ))
 
 (defun radians (graus)
   (/ (* graus (* 2 pi)) 360))
