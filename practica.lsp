@@ -1,6 +1,6 @@
 (defun inici ()
     (inici-objectes)
-    (pinta))
+    (repeteix))
 
 (defun inici-objectes ()
     (inici-camp)
@@ -99,6 +99,35 @@
         15 (get 'canodr 'angle) 0)
 )
 
+(defun repeteix ()
+    (pinta)
+    (princ "Pitja fletxa cap amunt o cap avall o ESC.")
+    (terpri)
+    (setq tecla (get-key))
+    (cond ((equal tecla 119) ; Pitjam w
+                (inc-angle-canoesq) (repeteix)) ; incrementa angle cano esquerre i repeteix
+            ((equal tecla 115) ; Pitja s
+                (dec-angle-canoesq) (repeteix)) ; decrementa angle cano esquerre i repeteix
+            ((equal tecla 105) ; Pitja i
+                (inc-angle-canodr) (repeteix)) ; incrementa angle cano dret i repeteix
+            ((equal tecla 107) ; Pitja k
+                (dec-angle-canodr) (repeteix)) ; decrementa angle cano dret i repeteix
+          ((equal tecla 27)  ; ESC
+           "Gràcies per jugar")                      ; acaba recursió
+          (t                 ; altrament
+           (repeteix))))           ; repeteix
+
+(defun repeteix-cano-esq ()
+    (pinta-canons)
+    (setq tecla (get-key))
+    (cond ((equal tecla 119) ; fletxa cap amunt
+           (inc-angle-canoesq) (repeteix-cano-esq)) ; incrementa angle i repeteix
+          ((equal tecla 115) ; fletxa cap avall
+           (dec-angle-canoesq) (repeteix-cano-esq)) ; decrementa angle i repeteix
+          ((equal tecla 27)  ; ESC
+           "Gràcies per jugar")                      ; acaba recursió
+          (t                 ; altrament
+           (repeteix))))           ; repeteix
 
 (defun rectangle (x y w h)
     (move x y)
@@ -138,11 +167,11 @@
 
 (defun inc-angle-canodr ()
     "incrementa l'angle"
-    (putprop 'canoesq (+ (get 'canodr 'angle) 1) 'angle))
+    (putprop 'canodr (+ (get 'canodr 'angle) 1) 'angle))
 
 (defun dec-angle-canodr ()
     "decrementa l'angle"
-    (putprop 'canoesq (- (get 'canodr 'angle) 1) 'angle))
+    (putprop 'canodr (- (get 'canodr 'angle) 1) 'angle))
 
 ;(defun angle (x y r angle)
 ;    (move x y)
