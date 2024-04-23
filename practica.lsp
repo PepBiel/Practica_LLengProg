@@ -166,12 +166,12 @@
     (putprop 'canoesq (- (get 'canoesq 'angle) 1) 'angle))
 
 (defun inc-angle-canodr ()
-    "incrementa l'angle"
-    (putprop 'canodr (+ (get 'canodr 'angle) 1) 'angle))
-
-(defun dec-angle-canodr ()
     "decrementa l'angle"
     (putprop 'canodr (- (get 'canodr 'angle) 1) 'angle))
+
+(defun dec-angle-canodr ()
+    "incrementa l'angle"
+    (putprop 'canodr (+ (get 'canodr 'angle) 1) 'angle))
 
 ;(defun angle (x y r angle)
 ;    (move x y)
