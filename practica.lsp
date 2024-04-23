@@ -310,7 +310,9 @@
         (round y)))
 
 (defun aturada ()
-    (bucle) ;DE MOMENT NO S'ATURA
+    (cond (> (+ (get 'bala 'Y) (get 'bala 'radi)) 
+                (get 'campdret 'altura)) (bucle))
+    
 )
 
 (defun inc-temps ()
