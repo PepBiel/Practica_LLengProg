@@ -158,11 +158,15 @@
             ((equal tecla 107) ; Pitja k
                 (dec-angle-canodr) (repeteix)) ; decrementa angle cano dret i repeteix
             ((equal tecla 102) ; Pitja f
-                (dispara-cano) (repeteix)) ; dispara
+                (dispara-cano) (repeteix)) ; dispara canó esquerre
             ((equal tecla 101) ; Pitja e
-                (aug-potencia) (repeteix))
+                (aug-potencia) (repeteix)) ; incrementam potència canó esquerre
             ((equal tecla 113) ; Pitja q
-                (dis-potencia) (repeteix))
+                (dis-potencia) (repeteix)) ; decrementam potència canó esquerre
+            ((equal tecla 97) ; Pitja a
+                (moure-esquerre) (repeteix)) ; movem canó esquerre cap esquerre
+            ((equal tecla 100) ; Pitja d
+                (moure-dreta) (repeteix)) ; movem canó esquerre cap dreta
           ((equal tecla 27)  ; ESC
            "Gràcies per jugar")                      ; acaba recursió
           (t                 ; altrament
@@ -214,6 +218,17 @@
 (defun dis-potencia ()
     "incrementa l'angle"
     (putprop 'canoesq (- (get 'canoesq 'potencia) 1) 'potencia))
+
+(defun moure-esquerre ()
+    (cond ((and (> (- (get 'canoesq 'posicio) 1) 0))
+         (putprop 'canoesq (- (get 'canoesq 'posicio) 1) 'posicio)) ; Hacer algo si el valor está dentro del rango
+        ))
+
+(defun moure-dreta()
+    (cond ((and (< (+ (+ (get 'canoesq 'posicio) (get 'canoesq 'amplada)) 1) 
+                        (get 'campesq 'amplada)))
+         (putprop 'canoesq (+ (get 'canoesq 'posicio) 1) 'posicio)))) ; Hacer algo si el valor está dentro del rango
+        
 
 ;(defun angle (x y r angle)
 ;    (move x y)
