@@ -158,7 +158,7 @@
             ((equal tecla 107) ; Pitja k
                 (dec-angle-canodr) (repeteix)) ; decrementa angle cano dret i repeteix
             ((equal tecla 102) ; Pitja f
-                (dispara-cano) (repeteix)) ; dispara canó esquerre
+                (dispara-cano) (dibuixar-bolla)) ; dispara canó esquerre
             ((equal tecla 101) ; Pitja e
                 (aug-potencia) (repeteix)) ; incrementam potència canó esquerre
             ((equal tecla 113) ; Pitja q
@@ -266,9 +266,10 @@
 ;4. Dibuixa -> segons posicions bala
 ;5. Mirar aturada -> si no colisiona tornar a 2 si coliona sortir.
 (defun dispara-cano ()
-    (move (round (get 'canoesq 'X)) (round (get 'canodr 'X)))
+    ;(move (round (get 'canoesq 'X)) (round (get 'canodr 'X)))
     (ini-bala)
-    (bucle))
+    (bucle)
+    (dibuixar-bolla))
 
 (defun bucle ()
     (calcular)
@@ -277,17 +278,38 @@
 )
 
 (defun calcular ()
-    (sleep 1)
+    (sleep 0.5)
     (calc-vel)
     (calc-pos)
     (inc-temps)
 )
 
 (defun dibuixar ()
+    (color 255 0 0)
+    (cond ((= (get 'bala 'trajectoria) 0)
+            (mover (get 'bala 'X) (get 'bala 'Y))
+            (putprop 'bala 1 'trajectoria))
+        ((= (get 'bala 'trajectoria) 1)
+            (drawr (get 'bala 'X) (get 'bala 'Y))
+            (putprop 'bala 0 'trajectoria)))
     ;(cercle (get 'bala 'X) (get 'bala 'Y) 
-    ;    (get 'bala 'radi) 100)
-    (drawr (get 'bala 'X) (get 'bala 'Y))
+    ;    (get 'bala 'radi) 100)  
 )
+
+(defun dibuixar-bolla ()
+    (cercle (get 'bala 'X) (get 'bala 'Y) 
+        (get 'bala 'radi) 100)
+    ;(cond ((equal tecla 32) ; Pitjam espai
+    ;            (repeteix))
+    ;        (t                 ; altrament
+    ;            (dibuixar-bolla))))
+    (esperar-entrada)
+    (repeteix))
+
+(defun esperar-entrada ()
+  (format t "Presiona la tecla espacio para continuar...")
+  (setq tecla (get-key))
+  (read-char))
 
 (defun cercle (x y radi segments)
     (mover (+ x radi) y)
@@ -317,7 +339,7 @@
 )
 
 (defun inc-temps ()
-    (putprop 'bala (+ (get 'bala 'temps) 0.01) 'temps)
+    (putprop 'bala (+ (get 'bala 'temps) 0.05) 'temps)
 )
 
 (defun ini-bala ()
@@ -332,6 +354,8 @@
     (putprop 'bala (get 'canoesq 'X) 'X) ;punta vector x
     (putprop 'bala (get 'canoesq 'Y) 'Y) ;punta vecetor y
     (putprop 'bala 5 'radi)
+    (putprop 'bala 0 'trajectoria)
+    (mover (get 'bala 'X) (get 'bala 'Y))
 )
 
 (defun calc-vel ()
