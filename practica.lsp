@@ -91,7 +91,7 @@
 
 ; PINTAM CAMP PRINCIPAL
 (defun pinta-camp()
-    (color 0 0 0)
+    (color 81 209 246)
     (rectangle 0 0 (get 'camp 'amplada) (get 'camp 'altura))
 )
 
@@ -278,7 +278,7 @@
 )
 
 (defun calcular ()
-    (sleep 0.5)
+    (sleep 0.05)
     (calc-vel)
     (calc-pos)
     (inc-temps)
