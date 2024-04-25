@@ -266,6 +266,7 @@
 ;4. Dibuixa -> segons posicions bala
 ;5. Mirar aturada -> si no colisiona tornar a 2 si coliona sortir.
 (defun dispara-cano ()
+    (move (round (get 'canoesq 'X)) (round (get 'canodr 'X)))
     (ini-bala)
     (bucle))
 
@@ -276,16 +277,16 @@
 )
 
 (defun calcular ()
-    ;(trace calc-vel)
-    ;(untrace calc-vel)
+    (sleep 1)
     (calc-vel)
     (calc-pos)
     (inc-temps)
 )
 
 (defun dibuixar ()
-    (cercle (get 'bala 'X) (get 'bala 'Y) 
-        (get 'bala 'radi) 100)
+    ;(cercle (get 'bala 'X) (get 'bala 'Y) 
+    ;    (get 'bala 'radi) 100)
+    (drawr (get 'bala 'X) (get 'bala 'Y))
 )
 
 (defun cercle (x y radi segments)
@@ -316,7 +317,7 @@
 )
 
 (defun inc-temps ()
-    (putprop 'bala (+ (get 'bala 'temps) 0.1) 'temps)
+    (putprop 'bala (+ (get 'bala 'temps) 0.01) 'temps)
 )
 
 (defun ini-bala ()
@@ -362,4 +363,11 @@
     (* 0.5 (get 'bala 'acceleracio) 
         (* (get 'bala 'temps) (get 'bala 'temps))))
 )
+
+(defun sleep (seconds)
+    "Espera la quantitat indicada de segons"
+    ; Això és un bucle iteratiu. NO PODEU FER-NE SERVIR ENLLOC MÉS
+    (do ((endtime (+ (get-internal-real-time)
+    (* seconds internal-time-units-per-second))))
+    ((> (get-internal-real-time) endtime))))
 
