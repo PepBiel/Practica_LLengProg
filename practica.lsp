@@ -279,15 +279,27 @@
 (defun bucle ()
     (calcular)
     (dibuixar)
+    ;(dibuixar-prova)
     (aturada)
 )
 
 (defun calcular ()
-    ;(sleep 0.0001)
+    (sleep 0.0001)
     (calc-vel)
     (calc-pos)
     (inc-temps)
 )
+
+; per dibuixar sa bolla com es mou
+(defun dibuixar-prova ()
+    (color 255 0 0)
+    (cercle (get 'bala 'X) (get 'bala 'Y) 
+        (get 'bala 'radi) 100)
+    (sleep 0.0001)
+    (color 255 255 255)
+    (cercle (get 'bala 'X) (get 'bala 'Y) 
+        (get 'bala 'radi) 100)
+    )
 
 (defun dibuixar ()
     (color 255 0 0)
@@ -302,6 +314,7 @@
 )
 
 (defun dibuixar-bolla ()
+    (color 255 0 0)
     (cercle (get 'bala 'X) (get 'bala 'Y) 
         (get 'bala 'radi) 100)
     ;(cond ((equal tecla 32) ; Pitjam espai
