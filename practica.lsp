@@ -283,7 +283,7 @@
 )
 
 (defun calcular ()
-    (sleep 0.005)
+    ;(sleep 0.0001)
     (calc-vel)
     (calc-pos)
     (inc-temps)
@@ -391,7 +391,7 @@
 )
 
 (defun inc-temps ()
-    (putprop 'bala (+ (get 'bala 'temps) 0.01) 'temps)
+    (putprop 'bala (+ (get 'bala 'temps) 0.0005) 'temps)
 )
 
 (defun ini-bala ()
@@ -447,3 +447,4 @@
     (* seconds internal-time-units-per-second))))
     ((> (get-internal-real-time) endtime))))
 
+(inici)
