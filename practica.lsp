@@ -43,7 +43,10 @@
 ; INICIALITZACIÓ DEL CAMP DRET
 (defun inici-campdret ()
     (putprop 'campdr (numero-aleatori 15 45) 'altura)
-    (putprop 'campdr (generar-campdret) 'amplada))
+    (putprop 'campdr (generar-campdret) 'amplada)
+    (putprop 'campdr (+ (get 'campesq 'amplada) (get 'mur 'amplada)) 
+        'posicio-campdr))
+    
 
 ; DETERMINAM L'AMPLADA DEL CAMP DRET
 ; sumam 1 a l'amplada del camp, li restam el mur, ho dividim entre 2 i li sumam la diferència dividida entre 2
@@ -73,6 +76,8 @@
            (floor (/ (get 'campdr 'amplada) 3))
            (- (* (floor (/ (get 'campdr 'amplada) 3)) 2) 
            (get 'canodr 'amplada))) 'posicio)
+    (putprop 'canodr (+ (get 'campdr 'posicio-campdr) 
+                        (get 'canodr 'posicio)) 'pos-exacte)
     (putprop 'canodr 135 'angle)
     (putprop 'canodr 20 'potencia)
     (putprop 'canodr 0 'X)
@@ -278,7 +283,7 @@
 )
 
 (defun calcular ()
-    (sleep 0.005)
+    (sleep 0.05)
     (calc-vel)
     (calc-pos)
     (inc-temps)
@@ -304,17 +309,12 @@
     ;        (t                 ; altrament
     ;            (dibuixar-bolla))))
     (esperar-entrada)
-    ;(repeteix)
-    )
+    (repeteix))
 
 (defun esperar-entrada ()
-  (format t "Pitja la tecla espai per continuar")
+  (format t "Presiona la tecla espacio para continuar...")
   (setq tecla (get-key))
-  (cond ((equal tecla 32) ; Pitjam w
-                (repeteix)) ; incrementa angle cano esquerre i repeteix
-          (t                 ; altrament
-           (terpri) (esperar-entrada)))
-  )
+  (read-char))
 
 (defun cercle (x y radi segments)
     (mover (+ x radi) y)
@@ -338,9 +338,47 @@
         (round y)))
 
 (defun aturada ()
-    (cond ((> (+ (get 'bala 'Y) (get 'bala 'radi)) 
-          (get 'campdr 'altura))
-       (bucle)))    
+    (colisio-campdret)
+)
+
+(defun colisio-campdret ()
+    (cond ((and (> (get 'bala 'X) (get 'campdr 'posicio-campdr)) 
+                (< (get 'bala 'Y) (get 'campdr 'altura)))
+                    (putprop 'bala (get 'campdr 'altura) 'Y)
+                    (putprop 'bala (- (get 'bala 'X) (get 'bala 'radi)) 'X))
+          (t (colisio-mur))   
+    )  
+)
+
+(defun colisio-mur ()
+    (cond ((and (>= (get 'bala 'X) (get 'campesq 'amplada))
+                (<= (get 'bala 'X) (get 'campdr 'posicio-campdr)))
+                    (cond ((<= (get 'bala 'Y) (get 'mur 'altura)))
+                        (t (bucle))))
+            (t (colisio-campesq))))
+
+(defun colisio-campesq ()
+    (cond ((and (< (get 'bala 'X) (get 'campesq 'amplada)) 
+                (< (get 'bala 'Y) (get 'campesq 'altura)))
+                    (putprop 'bala (get 'campesq 'altura) 'Y)
+                    (putprop 'bala (- (get 'bala 'X) (get 'bala 'radi)) 'X))
+          (t (colisio-limits)))
+)
+
+(defun colisio-limits ()
+    (cond ((or (< (get 'bala 'X) 0) 
+                (or (> (get 'bala 'Y) (get 'camp 'altura))
+                    (> (get 'bala 'X) (get 'camp 'amplada)))))
+            (t (bucle)))
+)
+
+(defun colisio-canodret ()
+    (cond ((and (>= (get 'bala 'X) (get 'canodr 'pos-exacte))
+                (<= (get 'bala 'X) (+ (get 'canodr 'pos-exacte) (get 'canodr 'amplada))))
+                    (cond ((and (>= (get 'bala 'Y) (get 'campdr 'altura)) 
+                                (<= (get 'bala 'Y) (+ (get 'campdr 'altura) (get 'canodr 'altura)))))
+                                (t (colisio-campdret))))
+            (t (colisio-campdret)))
 )
 
 (defun inc-temps ()
