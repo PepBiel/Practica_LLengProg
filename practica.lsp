@@ -283,7 +283,7 @@
 )
 
 (defun calcular ()
-    (sleep 0.05)
+    (sleep 0.005)
     (calc-vel)
     (calc-pos)
     (inc-temps)
@@ -309,12 +309,17 @@
     ;        (t                 ; altrament
     ;            (dibuixar-bolla))))
     (esperar-entrada)
-    (repeteix))
+    ;(repeteix)
+    )
 
 (defun esperar-entrada ()
-  (format t "Presiona la tecla espacio para continuar...")
+  (format t "Pitja la tecla espai per continuar")
   (setq tecla (get-key))
-  (read-char))
+  (cond ((equal tecla 32) ; Pitjam w
+                (repeteix)) ; incrementa angle cano esquerre i repeteix
+          (t                 ; altrament
+           (terpri) (esperar-entrada)))
+  )
 
 (defun cercle (x y radi segments)
     (mover (+ x radi) y)
@@ -338,7 +343,20 @@
         (round y)))
 
 (defun aturada ()
-    (colisio-campdret)
+    (colisio-canodret)
+)
+
+(defun colisio-canodret ()
+    (cond ((and (>= (get 'bala 'X) (get 'canodr 'pos-exacte))
+                (<= (get 'bala 'X) (+ (get 'canodr 'pos-exacte) 
+                        (get 'canodr 'amplada))))
+                    (cond ((and (>= (get 'bala 'Y) (get 'campdr 'altura)) 
+                                (<= (get 'bala 'Y) (+ (get 'campdr 'altura) 
+                                    (get 'canodr 'altura))))
+                                    (format t "Victoria")
+                                    (terpri))
+                                (t (colisio-campdret))))
+            (t (colisio-campdret)))
 )
 
 (defun colisio-campdret ()
@@ -370,15 +388,6 @@
                 (or (> (get 'bala 'Y) (get 'camp 'altura))
                     (> (get 'bala 'X) (get 'camp 'amplada)))))
             (t (bucle)))
-)
-
-(defun colisio-canodret ()
-    (cond ((and (>= (get 'bala 'X) (get 'canodr 'pos-exacte))
-                (<= (get 'bala 'X) (+ (get 'canodr 'pos-exacte) (get 'canodr 'amplada))))
-                    (cond ((and (>= (get 'bala 'Y) (get 'campdr 'altura)) 
-                                (<= (get 'bala 'Y) (+ (get 'campdr 'altura) (get 'canodr 'altura)))))
-                                (t (colisio-campdret))))
-            (t (colisio-campdret)))
 )
 
 (defun inc-temps ()
