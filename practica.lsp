@@ -158,7 +158,7 @@
             ((equal tecla 107) ; Pitja k
                 (dec-angle-canodr) (repeteix)) ; decrementa angle cano dret i repeteix
             ((equal tecla 102) ; Pitja f
-                (dispara-cano) (dibuixar-bolla)) ; dispara canó esquerre
+                (dispara-cano)) ; dispara canó esquerre
             ((equal tecla 101) ; Pitja e
                 (aug-potencia) (repeteix)) ; incrementam potència canó esquerre
             ((equal tecla 113) ; Pitja q
@@ -278,7 +278,7 @@
 )
 
 (defun calcular ()
-    (sleep 0.05)
+    (sleep 0.005)
     (calc-vel)
     (calc-pos)
     (inc-temps)
@@ -304,12 +304,17 @@
     ;        (t                 ; altrament
     ;            (dibuixar-bolla))))
     (esperar-entrada)
-    (repeteix))
+    ;(repeteix)
+    )
 
 (defun esperar-entrada ()
-  (format t "Presiona la tecla espacio para continuar...")
+  (format t "Pitja la tecla espai per continuar")
   (setq tecla (get-key))
-  (read-char))
+  (cond ((equal tecla 32) ; Pitjam w
+                (repeteix)) ; incrementa angle cano esquerre i repeteix
+          (t                 ; altrament
+           (terpri) (esperar-entrada)))
+  )
 
 (defun cercle (x y radi segments)
     (mover (+ x radi) y)
@@ -339,7 +344,7 @@
 )
 
 (defun inc-temps ()
-    (putprop 'bala (+ (get 'bala 'temps) 0.05) 'temps)
+    (putprop 'bala (+ (get 'bala 'temps) 0.01) 'temps)
 )
 
 (defun ini-bala ()
