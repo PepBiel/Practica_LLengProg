@@ -1,11 +1,15 @@
+;**************************************************************
 ;************************ PRÀCTICA LISP ***********************
+;**************************************************************
+
 
 ;********************* INICIALITZACIONS *************************
 
 ; FUNCIÓ INICIAL
 (defun inici ()
     (inici-objectes)
-    (repeteix))
+    (repeteix)
+)
 
 ; INICIALITZACIÓ D'OBJECTES
 (defun inici-objectes ()
@@ -22,38 +26,44 @@
     ; Posam aquests valors perque es vegi la línea del camp, però realment el camp és de 340x640
     (putprop 'camp 339 'altura)
     (putprop 'camp 639 'amplada)
-    (putprop 'camp (numero-aleatori 0 40) 'diferencia))
+    (putprop 'camp (numero-aleatori 0 40) 'diferencia)
+)
 
 ; INIZIALITZAM VALORS ALEATORIS PER EL MUR CENTRAL
 (defun inici-mur ()
     (putprop 'mur (numero-aleatori 100 150) 'altura)
-    (putprop 'mur (numero-aleatori 20 40) 'amplada))
+    (putprop 'mur (numero-aleatori 20 40) 'amplada)
+)
 
 ; INICIALITZACIÓ DEL CAMP ESQUERRE
 (defun inici-campesquerre ()
     (putprop 'campesq (numero-aleatori 15 45) 'altura)
-    (putprop 'campesq (generar-campesq) 'amplada))
+    (putprop 'campesq (generar-campesq) 'amplada)
+)
 
 ; DETERMINAM L'AMPLADA DEL CAMP ESQUERRE
 (defun generar-campesq ()
     ; sumam 1 a l'amplada del camp, li restam el mur, ho dividim entre 2 i li restam la diferència dividida entre 2
     (- (floor (- (+ (get 'camp 'amplada) 1) (get 'mur 'amplada)) 2) 
-        (floor (get 'camp 'diferencia) 2)))
+        (floor (get 'camp 'diferencia) 2))
+)
 
 ; INICIALITZACIÓ DEL CAMP DRET
 (defun inici-campdret ()
     (putprop 'campdr (numero-aleatori 15 45) 'altura)
     (putprop 'campdr (generar-campdret) 'amplada)
     (putprop 'campdr (+ (get 'campesq 'amplada) (get 'mur 'amplada)) 
-        'posicio-campdr))
+        'posicio-campdr)   ; posició exacte d'on comença el camp dret en X (suma del camp esquerre amb el mur)
+)
     
 
 ; DETERMINAM L'AMPLADA DEL CAMP DRET
-; sumam 1 a l'amplada del camp, li restam el mur, ho dividim entre 2 i li sumam la diferència dividida entre 2
-; se pot eliminar ja que per dibuixar no ho utilitzam
 (defun generar-campdret ()
+    ; sumam 1 a l'amplada del camp, li restam el mur, ho dividim entre 2 i li sumam la diferència dividida entre 2
+    ; se pot eliminar ja que per dibuixar no ho utilitzam
     (+ (floor (- (+ (get 'camp 'amplada) 1) (get 'mur 'amplada)) 2) 
-        (floor (get 'camp 'diferencia) 2)))
+        (floor (get 'camp 'diferencia) 2))
+)
 
 ; INICIALITZAM EL CANÓ ESQUERRE
 (defun inici-canoesquerr ()
@@ -62,11 +72,12 @@
     (putprop 'canoesq (numero-aleatori 
            (floor (/ (get 'campesq 'amplada) 3))
            (- (* (floor (/ (get 'campesq 'amplada) 3)) 2) 
-           (get 'canoesq 'amplada))) 'posicio)
+           (get 'canoesq 'amplada))) 'posicio)  ; posició en X d'on es troba el canó esquerre
     (putprop 'canoesq 45 'angle)
     (putprop 'canoesq 20 'potencia)
     (putprop 'canoesq 0 'X) ; posició en X de la punta final del canó
-    (putprop 'canoesq 0 'Y)) ; posició en Y de la punta final del canó
+    (putprop 'canoesq 0 'Y) ; posició en Y de la punta final del canó
+) 
 
 ; INICIALITZAM EL CANÓ DRET
 (defun inici-canodret ()
@@ -75,13 +86,14 @@
     (putprop 'canodr (numero-aleatori 
            (floor (/ (get 'campdr 'amplada) 3))
            (- (* (floor (/ (get 'campdr 'amplada) 3)) 2) 
-           (get 'canodr 'amplada))) 'posicio)
+           (get 'canodr 'amplada))) 'posicio) ; posició en X d'on es troba el canó dret dintre del seu camp, no és la posició exacte
     (putprop 'canodr (+ (get 'campdr 'posicio-campdr) 
-                        (get 'canodr 'posicio)) 'pos-exacte)
+                        (get 'canodr 'posicio)) 'pos-exacte)    ; posició exacte en X d'on es troba el canó dret
     (putprop 'canodr 135 'angle)
     (putprop 'canodr 20 'potencia)
-    (putprop 'canodr 0 'X)
-    (putprop 'canodr 0 'Y))
+    (putprop 'canodr 0 'X) ; posició en X de la punta final del canó
+    (putprop 'canodr 0 'Y) ; posició en Y de la punta final del canó
+) 
 
 ;************************ PINTAM ************************************
 
@@ -104,24 +116,28 @@
 (defun pinta-mur()
     (color 205 133 63)
     (rectangle (get 'campesq 'amplada) 0 (get 'mur 'amplada)
-         (get 'mur 'altura)))
+         (get 'mur 'altura))
+)
 
 ; CRIDAM A LES FUNCIONS DE PINTAR CAMPS
 (defun pinta-camps()
     (color 0 143 57)    ; color verd
     (pinta-campesquerre)
-    (pinta-campdret))
+    (pinta-campdret)
+)
 
 ; PINTAM CAMP ESQUERRE
 (defun pinta-campesquerre ()
     (move 0 (get 'campesq 'altura))
-    (draw (get 'campesq 'amplada) (get 'campesq 'altura)))
+    (draw (get 'campesq 'amplada) (get 'campesq 'altura))
+)
 
 ; PINTAM CAMP DRET
 (defun pinta-campdret ()
     (move (+ (get 'mur 'amplada) (get 'campesq 'amplada)) 
         (get 'campdr 'altura))
-    (draw (get 'camp 'amplada) (get 'campdr 'altura)))
+    (draw (get 'camp 'amplada) (get 'campdr 'altura))
+)
 
 ; CRIDAM A LES FUNCIONS PER PINTAR CANONS
 (defun pinta-canons()
@@ -136,7 +152,8 @@
         (get 'canoesq 'amplada) (get 'canoesq 'altura))
     (angle (+ (get 'canoesq 'posicio) (floor (get 'canoesq 'amplada) 2)) 
         (+ (get 'campesq 'altura) (get 'canoesq 'altura)) 
-        (get 'canoesq 'potencia) (get 'canoesq 'angle) 1))
+        (get 'canoesq 'potencia) (get 'canoesq 'angle) 1)
+)
 
 ; PINTAM CANÓ DRET
 (defun pinta-canodret ()
@@ -147,98 +164,184 @@
     (angle (+ (+ (get 'canodr 'posicio) (floor (get 'canodr 'amplada) 2)) 
         (+ (get 'campesq 'amplada) (get 'mur 'amplada))) 
         (+ (get 'campdr 'altura) (get 'canodr 'altura)) 
-        (get 'canodr 'potencia) (get 'canodr 'angle) 0))
+        (get 'canodr 'potencia) (get 'canodr 'angle) 0)
+)
+
+; PINTAM UN RECTANGLE
+; dibuixam un rectangle en la posició (x, y), amb altura h i amplada w
+(defun rectangle (x y w h)
+    (move x y)
+    (drawrel w 0)
+    (drawrel 0 h)
+    (drawrel (- w) 0)
+    (drawrel 0 (- h))
+)
+
+
+;************************ NOMBRE ALEATORI ************************************
+
+(defun numero-aleatori (minim maxim)
+    (+ minim (random (+ 1 (- maxim minim))))
+)
+
+;************************ REPETICIÓ ************************************
 
 (defun repeteix ()
     (pinta)
     (princ "Pitja fletxa cap amunt o cap avall o ESC.")
     (terpri)
     (setq tecla (get-key))
+            ; CANO ESQUERRE
     (cond ((equal tecla 119) ; Pitjam w
-                (inc-angle-canoesq) (repeteix)) ; incrementa angle cano esquerre i repeteix
+                (inc-angle-canons 1) (repeteix)) ; incrementa angle cano esquerre i repeteix
             ((equal tecla 115) ; Pitja s
-                (dec-angle-canoesq) (repeteix)) ; decrementa angle cano esquerre i repeteix
-            ((equal tecla 105) ; Pitja i
-                (inc-angle-canodr) (repeteix)) ; incrementa angle cano dret i repeteix
-            ((equal tecla 107) ; Pitja k
-                (dec-angle-canodr) (repeteix)) ; decrementa angle cano dret i repeteix
+                (dec-angle-canons 1) (repeteix)) ; decrementa angle cano esquerre i repeteix
             ((equal tecla 102) ; Pitja f
-                (dispara-cano)) ; dispara canó esquerre
+                (dispara-canons 1)) ; dispara canó esquerre
             ((equal tecla 101) ; Pitja e
-                (aug-potencia) (repeteix)) ; incrementam potència canó esquerre
+                (aug-potencia-canons 1) (repeteix)) ; incrementam potència canó esquerre
             ((equal tecla 113) ; Pitja q
-                (dis-potencia) (repeteix)) ; decrementam potència canó esquerre
+                (dis-potencia-canons 1) (repeteix)) ; decrementam potència canó esquerre
             ((equal tecla 97) ; Pitja a
-                (moure-esquerre) (repeteix)) ; movem canó esquerre cap esquerre
+                (moure-esquerre-canons 1) (repeteix)) ; movem canó esquerre cap esquerre
             ((equal tecla 100) ; Pitja d
-                (moure-dreta) (repeteix)) ; movem canó esquerre cap dreta
-          ((equal tecla 27)  ; ESC
-           "Gràcies per jugar")                      ; acaba recursió
-          (t                 ; altrament
-           (repeteix))))           ; repeteix
+                (moure-dreta-canons 1) (repeteix)) ; movem canó esquerre cap dreta
+            
+            ; CANO DRETA
+            ((equal tecla 105) ; Pitja i
+                (inc-angle-canons 0) (repeteix)) ; incrementa angle cano dret i repeteix
+            ((equal tecla 107) ; Pitja k
+                (dec-angle-canons 0) (repeteix)) ; decrementa angle cano dret i repeteix
+            ((equal tecla 104) ; Pitja h
+                (dispara-canons 0)) ; dispara canó dret
+            ((equal tecla 117) ; Pitja u
+                (aug-potencia-canons 0) (repeteix)) ; incrementam potència canó dret
+            ((equal tecla 111) ; Pitja o
+                (dis-potencia-canons 0) (repeteix)) ; decrementam potència canó dret
+            ((equal tecla 106) ; Pitja j
+                (moure-esquerre-canons 0) (repeteix)) ; movem canó esquerre cap dret
+            ((equal tecla 108) ; Pitja l
+                (moure-dreta-canons 0) (repeteix)) ; movem canó dret cap dreta
 
-(defun repeteix-cano-esq ()
-    (pinta-canons)
-    (setq tecla (get-key))
-    (cond ((equal tecla 119) ; fletxa cap amunt
-           (inc-angle-canoesq) (repeteix-cano-esq)) ; incrementa angle i repeteix
-          ((equal tecla 115) ; fletxa cap avall
-           (dec-angle-canoesq) (repeteix-cano-esq)) ; decrementa angle i repeteix
-          ((equal tecla 27)  ; ESC
-           "Gràcies per jugar")                      ; acaba recursió
-          (t                 ; altrament
-           (repeteix))))           ; repeteix
+            ; ACABA EL JOC
+            ((equal tecla 27)  ; ESC
+                "Gràcies per jugar")    ; acaba la recursió
+                
+            ; TECLA NO RECONEGUDA
+            (t                 ; altrament
+                (repeteix))))           ; repeteix
 
-(defun rectangle (x y w h)
-    (move x y)
-    (drawrel w 0)
-    (drawrel 0 h)
-    (drawrel (- w) 0)
-    (drawrel 0 (- h)))
 
-(defun numero-aleatori (minim maxim)
-    (+ minim (random (+ 1 (- maxim minim)))))
+; *************************** ACCIONS TECLES *********************************
 
-(defun inc-angle-canoesq ()
-    "incrementa l'angle"
-    (print (get 'canoesq 'angle))
-    (putprop 'canoesq (+ (get 'canoesq 'angle) 1) 'angle))
+; cano = 1 -> conó esquerre
+; cano = 0 -> conó dret
 
-(defun dec-angle-canoesq ()
-    "decrementa l'angle"
-    (putprop 'canoesq (- (get 'canoesq 'angle) 1) 'angle))
+; INCREMENTAM ANGLE CANONS
+(defun inc-angle-canons (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            ; s'agafa l'angle guardat, se li suma 1 i es guarda el nou valor
+            (putprop 'canoesq (+ (get 'canoesq 'angle) 1) 'angle))
 
-(defun inc-angle-canodr ()
-    "decrementa l'angle"
-    (putprop 'canodr (- (get 'canodr 'angle) 1) 'angle))
+        ((= cano 0) ; Si es el cano dret
+            ; s'agafa l'angle guardat, se li suma 1 i es guarda el nou valor
+            (putprop 'canodr (- (get 'canodr 'angle) 1) 'angle))
+        (t
+            (format t "Cano no reconegut."))
+    )
+)
 
-(defun dec-angle-canodr ()
-    "incrementa l'angle"
-    (putprop 'canodr (+ (get 'canodr 'angle) 1) 'angle))
+; DECREMENTAM ANGLE CANONS
+(defun dec-angle-canons (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            ; s'agafa l'angle guardat, se li resta 1 i es guarda el nou valor
+            (putprop 'canoesq (- (get 'canoesq 'angle) 1) 'angle))
 
-(defun aug-potencia ()
-    "incrementa l'angle"
-    (putprop 'canoesq (+ (get 'canoesq 'potencia) 1) 'potencia))
+        ((= cano 0) ; Si es el cano dret
+            ; s'agafa l'angle guardat, se li resta 1 i es guarda el nou valor
+            (putprop 'canodr (+ (get 'canodr 'angle) 1) 'angle))
+        (t
+            (format t "Cano no reconegut."))
+    )
+)
 
-(defun dis-potencia ()
-    "incrementa l'angle"
-    (putprop 'canoesq (- (get 'canoesq 'potencia) 1) 'potencia))
+; AUGMENTAM POTÈNCIA CANONS
+(defun aug-potencia-canons (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            ; s'agafa la potència guardada, se li suma 1 i es guarda el nou valor
+            (putprop 'canoesq (+ (get 'canoesq 'potencia) 1) 'potencia))
 
-(defun moure-esquerre ()
-    (cond ((and (> (- (get 'canoesq 'posicio) 1) 0))
-         (putprop 'canoesq (- (get 'canoesq 'posicio) 1) 'posicio)) ; Hacer algo si el valor está dentro del rango
-        ))
+        ((= cano 0) ; Si es el cano dret
+            ; s'agafa la potència guardada, se li suma 1 i es guarda el nou valor
+            (putprop 'canodr (+ (get 'canodr 'potencia) 1) 'potencia))
+        (t
+            (format t "Cano no reconegut."))
+    )
+)
 
-(defun moure-dreta()
-    (cond ((and (< (+ (+ (get 'canoesq 'posicio) (get 'canoesq 'amplada)) 1) 
-                        (get 'campesq 'amplada)))
-         (putprop 'canoesq (+ (get 'canoesq 'posicio) 1) 'posicio)))) ; Hacer algo si el valor está dentro del rango
-        
+; DISMINUIM POTÈNCIA CANONS
+(defun dis-potencia-canons (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            ; s'agafa la potència guardada, se li resta 1 i es guarda el nou valor
+            (putprop 'canoesq (- (get 'canoesq 'potencia) 1) 'potencia))
 
-;(defun angle (x y r angle)
-;    (move x y)
-;    (drawr (+ x (* r (cos (radians angle))))
-;           (+ y (* r (sin (radians angle))))))
+        ((= cano 0) ; Si es el cano dret
+            ; s'agafa la potència guardada, se li resta 1 i es guarda el nou valor
+            (putprop 'canodr (- (get 'canodr 'potencia) 1) 'potencia))
+        (t
+            (format t "Cano no reconegut."))
+    )
+)
+
+; MOVEM CANONS A LA ESQUERRE
+(defun moure-esquerre-canons (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            ; si el cano una posició menys es troba dintre del camp esquerre, es podrà moure
+            (cond ((and (> (- (get 'canoesq 'posicio) 1) 0))
+                (putprop 'canoesq (- (get 'canoesq 'posicio) 1) 'posicio))
+            ))
+
+        ((= cano 0) ; Si es el cano dret
+            ; si el cano una posició menys es troba dintre del camp dret, es podrà moure
+            (cond ((and (> (- (get 'canodr 'pos-exacte) 1) 
+                (get 'campdr 'posicio-campdr)))
+                    (putprop 'canodr (- (get 'canodr 'pos-exacte) 1) 
+                        'pos-exacte)
+                    (putprop 'canodr (- (get 'canodr 'posicio) 1) 
+                        'posicio))
+            ))
+        (t
+            (format t "Cano no reconegut."))
+    )
+)
+
+; MOVEM CANONS A LA DRETA
+(defun moure-dreta-canons (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            ; si el cano una posició més es troba dintre del camp esquerre, es podrà moure
+            (cond ((and (< (+ (+ (get 'canoesq 'posicio) 
+                    (get 'canoesq 'amplada)) 1) (get 'campesq 'amplada)))
+                            (putprop 'canoesq (+ (get 'canoesq 'posicio) 1) 
+                                'posicio))))
+
+        ((= cano 0) ; Si es el cano dret
+            ; si el cano una posició més es troba dintre del camp dret, es podrà moure
+            (cond ((and (< (+ (+ (get 'canodr 'pos-exacte) 
+                    (get 'canoesq 'amplada)) 1) (get 'camp 'amplada)))
+                            (putprop 'canodr (+ (get 'canodr 'pos-exacte) 1) 
+                                'pos-exacte)
+                            (putprop 'canodr (+ (get 'canodr 'posicio) 1) 
+                                'posicio))))
+        (t
+            (format t "Cano no reconegut."))
+    )
+)
 
 (defun angle (x y r angle mode)
   (cond
@@ -254,7 +357,7 @@
         (putprop 'canodr (+ y (* r (sin (radians angle)))) 'Y)
         (drawr (get 'canodr 'X) (get 'canodr 'Y)))
     (t
-     (format t "Modo no reconocido."))
+     (format t "Cano no reconegut."))
   ))
 
 (defun radians (graus)
@@ -270,60 +373,64 @@
 ;3. Calcula -> velocitats (depen de les anteriors) i posicions (depen de les anteriors)
 ;4. Dibuixa -> segons posicions bala
 ;5. Mirar aturada -> si no colisiona tornar a 2 si coliona sortir.
-(defun dispara-cano ()
+(defun dispara-canons (cano)
     ;(move (round (get 'canoesq 'X)) (round (get 'canodr 'X)))
-    (ini-bala)
-    (bucle)
-    (dibuixar-bolla))
+    (ini-bala cano)
+    (bucle cano)
+    (dibuixar-bolla cano))
 
-(defun bucle ()
-    (calcular)
-    (dibuixar)
-    ;(dibuixar-prova)
-    (aturada)
+(defun bucle (cano)
+    (calcular cano)
+    (dibuixar cano)
+    (aturada cano)
 )
 
-(defun calcular ()
+(defun calcular (cano)
     (sleep 0.0001)
-    (calc-vel)
-    (calc-pos)
-    (inc-temps)
+    (calc-vel cano)
+    (calc-pos cano)
+    (inc-temps cano)
 )
 
-; per dibuixar sa bolla com es mou
-(defun dibuixar-prova ()
+(defun dibuixar (cano)
     (color 255 0 0)
-    (cercle (get 'bala 'X) (get 'bala 'Y) 
-        (get 'bala 'radi) 100)
-    (sleep 0.0001)
-    (color 255 255 255)
-    (cercle (get 'bala 'X) (get 'bala 'Y) 
-        (get 'bala 'radi) 100)
-    )
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (cond ((= (get 'bala-esq 'trajectoria) 0)
+                (mover (get 'bala-esq 'X) (get 'bala-esq 'Y))
+                (putprop 'bala-esq 1 'trajectoria))
+            ((= (get 'bala-esq 'trajectoria) 1)
+                (drawr (get 'bala-esq 'X) (get 'bala-esq 'Y))
+                (putprop 'bala-esq 0 'trajectoria))))
 
-(defun dibuixar ()
-    (color 255 0 0)
-    (cond ((= (get 'bala 'trajectoria) 0)
-            (mover (get 'bala 'X) (get 'bala 'Y))
-            (putprop 'bala 1 'trajectoria))
-        ((= (get 'bala 'trajectoria) 1)
-            (drawr (get 'bala 'X) (get 'bala 'Y))
-            (putprop 'bala 0 'trajectoria)))
-    ;(cercle (get 'bala 'X) (get 'bala 'Y) 
-    ;    (get 'bala 'radi) 100)  
+        ((= cano 0) ; Si es el cano dret
+            (cond ((= (get 'bala-dr 'trajectoria) 0)
+                (mover (get 'bala-dr 'X) (get 'bala-dr 'Y))
+                (putprop 'bala-dr 1 'trajectoria))
+            ((= (get 'bala-dr 'trajectoria) 1)
+                (drawr (get 'bala-dr 'X) (get 'bala-dr 'Y))
+                (putprop 'bala-dr 0 'trajectoria))))
+        (t
+            (format t "Cano no reconegut."))
+    )
 )
 
-(defun dibuixar-bolla ()
+(defun dibuixar-bolla (cano)
     (color 255 0 0)
-    (cercle (get 'bala 'X) (get 'bala 'Y) 
-        (get 'bala 'radi) 100)
-    ;(cond ((equal tecla 32) ; Pitjam espai
-    ;            (repeteix))
-    ;        (t                 ; altrament
-    ;            (dibuixar-bolla))))
-    (esperar-entrada)
-    ;(repeteix)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (cercle (get 'bala-esq 'X) (get 'bala-esq 'Y) 
+                (get 'bala-esq 'radi) 100)
+            (esperar-entrada))
+
+        ((= cano 0) ; Si es el cano dret
+            (cercle (get 'bala-dr 'X) (get 'bala-dr 'Y) 
+                (get 'bala-dr 'radi) 100)
+            (esperar-entrada))
+        (t
+            (format t "Cano no reconegut."))
     )
+)
 
 (defun esperar-entrada ()
   (format t "Pitja la tecla espai per continuar")
@@ -332,7 +439,7 @@
                 (repeteix)) ; incrementa angle cano esquerre i repeteix
           (t                 ; altrament
            (terpri) (esperar-entrada)))
-  )
+)
 
 (defun cercle (x y radi segments)
     (mover (+ x radi) y)
@@ -355,102 +462,244 @@
   (draw (round x) 
         (round y)))
 
-(defun aturada ()
-    (colisio-canodret)
+(defun aturada (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (colisio-canodret cano))
+
+        ((= cano 0) ; Si es el cano dret
+            (colisio-canoesquerre cano))
+        (t
+            (format t "Cano no reconegut."))
+    )
 )
 
-(defun colisio-canodret ()
-    (cond ((and (>= (get 'bala 'X) (get 'canodr 'pos-exacte))
-                (<= (get 'bala 'X) (+ (get 'canodr 'pos-exacte) 
-                        (get 'canodr 'amplada))))
-                    (cond ((and (>= (get 'bala 'Y) (get 'campdr 'altura)) 
-                                (<= (get 'bala 'Y) (+ (get 'campdr 'altura) 
-                                    (get 'canodr 'altura))))
-                                    (format t "Victoria")
-                                    (terpri))
-                                (t (colisio-campdret))))
-            (t (colisio-campdret)))
+(defun colisio-canodret (cano)
+    (cond ((and (>= (get 'bala-esq 'X) (get 'canodr 'pos-exacte))
+            (<= (get 'bala-esq 'X) (+ (get 'canodr 'pos-exacte) 
+                    (get 'canodr 'amplada))))
+                (cond ((and (>= (get 'bala-esq 'Y) (get 'campdr 'altura)) 
+                            (<= (get 'bala-esq 'Y) (+ (get 'campdr 'altura) 
+                                (get 'canodr 'altura))))
+                                (format t "Victoria del cano esquerre")
+                                (terpri))
+                            (t (colisio-campdret cano))))
+        (t (colisio-campdret cano)))
 )
 
-(defun colisio-campdret ()
-    (cond ((and (> (get 'bala 'X) (get 'campdr 'posicio-campdr)) 
-                (< (get 'bala 'Y) (get 'campdr 'altura)))
-                    (putprop 'bala (get 'campdr 'altura) 'Y)
-                    (putprop 'bala (- (get 'bala 'X) (get 'bala 'radi)) 'X))
-          (t (colisio-mur))   
-    )  
+(defun colisio-canoesquerre (cano)
+    (cond ((and (>= (get 'bala-dr 'X) (get 'canoesq 'posicio))
+            (<= (get 'bala-dr 'X) (+ (get 'canoesq 'posicio) 
+                    (get 'canoesq 'amplada))))
+                (cond ((and (>= (get 'bala-dr 'Y) (get 'campesq 'altura)) 
+                            (<= (get 'bala-dr 'Y) (+ (get 'campesq 'altura) 
+                                (get 'canoesq 'altura))))
+                                (format t "Victoria del cano dret")
+                                (terpri))
+                            (t (colisio-campdret cano))))
+        (t (colisio-campdret cano)))
 )
 
-(defun colisio-mur ()
-    (cond ((and (>= (get 'bala 'X) (get 'campesq 'amplada))
-                (<= (get 'bala 'X) (get 'campdr 'posicio-campdr)))
-                    (cond ((<= (get 'bala 'Y) (get 'mur 'altura)))
-                        (t (bucle))))
-            (t (colisio-campesq))))
+(defun colisio-campdret (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (cond ((and (> (get 'bala-esq 'X) (get 'campdr 'posicio-campdr)) 
+                        (< (get 'bala-esq 'Y) (get 'campdr 'altura))))
+            (t (colisio-mur cano))))
 
-(defun colisio-campesq ()
-    (cond ((and (< (get 'bala 'X) (get 'campesq 'amplada)) 
-                (< (get 'bala 'Y) (get 'campesq 'altura)))
-                    (putprop 'bala (get 'campesq 'altura) 'Y)
-                    (putprop 'bala (- (get 'bala 'X) (get 'bala 'radi)) 'X))
-          (t (colisio-limits)))
+        ((= cano 0) ; Si es el cano dret
+            (cond ((and (> (get 'bala-dr 'X) (get 'campdr 'posicio-campdr)) 
+                        (< (get 'bala-dr 'Y) (get 'campdr 'altura))))
+            (t (colisio-mur cano))))
+        (t
+            (format t "Cano no reconegut."))
+    ) 
 )
 
-(defun colisio-limits ()
-    (cond ((or (< (get 'bala 'X) 0) 
-                (or (> (get 'bala 'Y) (get 'camp 'altura))
-                    (> (get 'bala 'X) (get 'camp 'amplada)))))
-            (t (bucle)))
+(defun colisio-mur (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (cond ((and (>= (get 'bala-esq 'X) (get 'campesq 'amplada))
+                        (<= (get 'bala-esq 'X) 
+                            (get 'campdr 'posicio-campdr)))
+                                (cond ((<= (get 'bala-esq 'Y) 
+                                    (get 'mur 'altura)))
+                                        (t (bucle cano))))
+                    (t (colisio-campesq cano))))
+
+        ((= cano 0) ; Si es el cano dret
+            (cond ((and (>= (get 'bala-dr 'X) (get 'campesq 'amplada))
+                        (<= (get 'bala-dr 'X) 
+                            (get 'campdr 'posicio-campdr)))
+                                (cond ((<= (get 'bala-dr 'Y) 
+                                    (get 'mur 'altura)))
+                                        (t (bucle cano))))
+                    (t (colisio-campesq cano))))
+        (t
+            (format t "Cano no reconegut."))
+    ) 
 )
 
-(defun inc-temps ()
-    (putprop 'bala (+ (get 'bala 'temps) 0.0005) 'temps)
+(defun colisio-campesq (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (cond ((and (< (get 'bala-esq 'X) (get 'campesq 'amplada)) 
+                            (< (get 'bala-esq 'Y) (get 'campesq 'altura))))
+                    (t (colisio-limits cano))))
+
+        ((= cano 0) ; Si es el cano dret
+            (cond ((and (< (get 'bala-dr 'X) (get 'campesq 'amplada)) 
+                            (< (get 'bala-dr 'Y) (get 'campesq 'altura))))
+                    (t (colisio-limits cano))))
+        (t
+            (format t "Cano no reconegut."))
+    ) 
 )
 
-(defun ini-bala ()
-    (putprop 'bala (* (get 'canoesq 'potencia) 
-        (cos (* (get 'canoesq 'angle) (/ pi 180)))) 'vix)
+(defun colisio-limits (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (cond ((or (< (get 'bala-esq 'X) 0) 
+                    (or (> (get 'bala-esq 'Y) (get 'camp 'altura))
+                        (> (get 'bala-esq 'X) (get 'camp 'amplada)))))
+                (t (bucle cano))))
 
-    (putprop 'bala (* (get 'canoesq 'potencia) 
-        (sin (* (get 'canoesq 'angle) (/ pi 180)))) 'viy)
-        
-    (putprop 'bala -9.8 'acceleracio)
-    (putprop 'bala 0 'temps)
-    (putprop 'bala (get 'canoesq 'X) 'X) ;punta vector x
-    (putprop 'bala (get 'canoesq 'Y) 'Y) ;punta vecetor y
-    (putprop 'bala 5 'radi)
-    (putprop 'bala 0 'trajectoria)
-    (mover (get 'bala 'X) (get 'bala 'Y))
+        ((= cano 0) ; Si es el cano dret
+            (cond ((or (< (get 'bala-dr 'X) 0) 
+                    (or (> (get 'bala-dr 'Y) (get 'camp 'altura))
+                        (> (get 'bala-dr 'X) (get 'camp 'amplada)))))
+                (t (bucle cano))))
+        (t
+            (format t "Cano no reconegut."))
+    ) 
 )
 
-(defun calc-vel ()
-    ;(print (get 'bala 'vix))
-    (putprop 'bala (get 'bala 'vix) 'vix)
-    ;(print (calc-vely))
-    (putprop 'bala (calc-vely) 'viy)
+(defun inc-temps (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (putprop 'bala-esq 
+                (+ (get 'bala-esq 'temps) 0.0005) 'temps))
+
+        ((= cano 0) ; Si es el cano dret
+            (putprop 'bala-dr 
+                (+ (get 'bala-dr 'temps) 0.0005) 'temps))
+        (t
+            (format t "Cano no reconegut."))
+    )
+)
+
+(defun ini-bala (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (putprop 'bala-esq (* (get 'canoesq 'potencia) 
+                (cos (* (get 'canoesq 'angle) (/ pi 180)))) 'vix)
+
+            (putprop 'bala-esq (* (get 'canoesq 'potencia) 
+                (sin (* (get 'canoesq 'angle) (/ pi 180)))) 'viy)
+                
+            (putprop 'bala-esq -9.8 'acceleracio)
+            (putprop 'bala-esq 0 'temps)
+            (putprop 'bala-esq (get 'canoesq 'X) 'X) ;punta vector x
+            (putprop 'bala-esq (get 'canoesq 'Y) 'Y) ;punta vecetor y
+            (putprop 'bala-esq 5 'radi)
+            (putprop 'bala-esq 0 'trajectoria)
+            (mover (get 'bala-esq 'X) (get 'bala-esq 'Y)))
+
+        ((= cano 0) ; Si es el cano dret
+            (putprop 'bala-dr (* (get 'canodr 'potencia) 
+                (cos (* (get 'canodr 'angle) (/ pi 180)))) 'vix)
+
+            (putprop 'bala-dr (* (get 'canodr 'potencia) 
+                (sin (* (get 'canodr 'angle) (/ pi 180)))) 'viy)
+                
+            (putprop 'bala-dr -9.8 'acceleracio)
+            (putprop 'bala-dr 0 'temps)
+            (putprop 'bala-dr (get 'canodr 'X) 'X) ;punta vector x
+            (putprop 'bala-dr (get 'canodr 'Y) 'Y) ;punta vecetor y
+            (putprop 'bala-dr 5 'radi)
+            (putprop 'bala-dr 0 'trajectoria)
+            (mover (get 'bala-dr 'X) (get 'bala-dr 'Y)))
+        (t
+            (format t "Cano no reconegut."))
+    )
+)
+
+(defun calc-vel (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (putprop 'bala-esq (get 'bala-esq 'vix) 'vix)
+            (putprop 'bala-esq (calc-vely cano) 'viy))
+
+        ((= cano 0) ; Si es el cano dret
+            (putprop 'bala-dr (get 'bala-esq 'vix) 'vix)
+            (putprop 'bala-dr (calc-vely cano) 'viy))
+        (t
+            (format t "Cano no reconegut."))
+    )
 )
     
+; falta cano dret
+(defun calc-vely (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (+ (get 'bala-esq 'viy) (* (get 'bala-esq 'acceleracio) 
+            (get 'bala-esq 'temps))))
 
-(defun calc-vely ()
-    (+ (get 'bala 'viy) (* (get 'bala 'acceleracio) 
-    (get 'bala 'temps)))
+        ((= cano 0) ; Si es el cano dret
+            (+ (get 'bala-dr 'viy) (* (get 'bala-dr 'acceleracio) 
+            (get 'bala-dr 'temps))))
+        (t
+            (format t "Cano no reconegut."))
+    )
 )
 
-(defun calc-pos ()
-    (putprop 'bala (calc-posx) 'X)
-    (putprop 'bala (calc-posy) 'Y)
+(defun calc-pos (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (putprop 'bala-esq (calc-posx cano) 'X)
+            (putprop 'bala-esq (calc-posy cano) 'Y))
+
+        ((= cano 0) ; Si es el cano dret
+            (putprop 'bala-dr (calc-posx cano) 'X)
+            (putprop 'bala-dr (calc-posy cano) 'Y))
+        (t
+            (format t "Cano no reconegut."))
+    )
 )
 
-(defun calc-posx ()
-    (+ (get 'bala 'X) (* (get 'bala 'vix) 
-    (get 'bala 'temps)))
+; falta cano dret
+(defun calc-posx (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (+ (get 'bala-esq 'X) (* (get 'bala-esq 'vix) 
+            (get 'bala-esq 'temps))))
+
+        ((= cano 0) ; Si es el cano dret
+            (- (get 'bala-dr 'X) (* (get 'bala-dr 'vix) 
+            (get 'bala-dr 'temps))))
+        (t
+            (format t "Cano no reconegut."))
+    )
 )
 
-(defun calc-posy ()
-    (+ (get 'bala 'Y) (* (get 'bala 'viy) 
-        (get 'bala 'temps)) 
-    (* 0.5 (get 'bala 'acceleracio) 
-        (* (get 'bala 'temps) (get 'bala 'temps))))
+; falta cano dret
+(defun calc-posy (cano)
+    
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (+ (get 'bala-esq 'Y) (* (get 'bala-esq 'viy) 
+                (get 'bala-esq 'temps)) 
+            (* 0.5 (get 'bala-esq 'acceleracio) 
+                (* (get 'bala-esq 'temps) (get 'bala-esq 'temps)))))
+
+        ((= cano 0) ; Si es el cano dret
+            (+ (get 'bala-dr 'Y) (* (get 'bala-dr 'viy) 
+                (get 'bala-dr 'temps)) 
+            (* 0.5 (get 'bala-dr 'acceleracio) 
+                (* (get 'bala-dr 'temps) (get 'bala-dr 'temps)))))
+        (t
+            (format t "Cano no reconegut."))
+    )
 )
 
 (defun sleep (seconds)
