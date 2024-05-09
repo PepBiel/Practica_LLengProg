@@ -19,6 +19,8 @@
     (inici-campdret)
     (inici-canoesquerr)
     (inici-canodret)
+    (inici-vent)
+    (inici-bandera)
 )
 
 ; INICIALITZAM CAMP
@@ -93,7 +95,20 @@
     (putprop 'canodr 20 'potencia)
     (putprop 'canodr 0 'X) ; posició en X de la punta final del canó
     (putprop 'canodr 0 'Y) ; posició en Y de la punta final del canó
-) 
+)
+
+(defun inici-vent ()
+    (putprop 'vent (- (numero-aleatori 0 10) 5) 'vent)
+)
+
+(defun inici-bandera ()
+    (putprop 'bandera (+ (get 'campesq 'amplada) 
+                        (floor (/ (get 'mur 'amplada) 2))) 'posicioX)
+    (putprop 'bandera (get 'mur 'altura) 'posicioY)
+    (putprop 'bandera 20 'pal)
+    (putprop 'bandera 20 'amplada)
+    (putprop 'bandera 10 'altura)
+)
 
 ;************************ PINTAM ************************************
 
@@ -104,6 +119,8 @@
     (pinta-mur)
     (pinta-camps)
     (pinta-canons)
+    (pinta-pal)
+    (pinta-bandera)
 )
 
 ; PINTAM CAMP PRINCIPAL
@@ -165,6 +182,44 @@
         (+ (get 'campesq 'amplada) (get 'mur 'amplada))) 
         (+ (get 'campdr 'altura) (get 'canodr 'altura)) 
         (get 'canodr 'potencia) (get 'canodr 'angle) 0)
+)
+
+(defun pinta-pal ()
+    (move (get 'bandera 'posicioX) (get 'bandera 'posicioY))
+    (draw (get 'bandera 'posicioX) (+ (get 'bandera 'posicioY) 
+                                    (get 'bandera 'pal)))
+)
+
+(defun pinta-bandera()
+    (cond
+        ((= (get 'vent 'vent) 0) ; Si el vent és 0
+            )
+
+        ((< (get 'vent 'vent) 0) ; Si es vent és negatiu
+            (secciona-bandera (- (get 'vent 'vent) 1) 
+                                    (get 'bandera 'posicioX) 
+                                    (+ (get 'bandera 'posicioY) 
+                                        (/ (get 'bandera 'pal) 2))))
+            
+        (t                          ; si el vent és positiu
+            (secciona-bandera (+ (get 'vent 'vent) 1)
+                                    (get 'bandera 'posicioX) 
+                                    (+ (get 'bandera 'posicioY) 
+                                        (/ (get 'bandera 'pal) 2))))
+    )
+    
+)
+
+(defun secciona-bandera (n x y)
+    (cond ((= n 0) nil)
+            ((> n 0) 
+                (rectangle x y 5 10)
+                (secciona-bandera (- n 1) (+ x 5) y))
+            (t 
+                (rectangle x y (- 5) 10)
+                (secciona-bandera (+ n 1) (- x 5) y))
+    
+    )
 )
 
 ; PINTAM UN RECTANGLE
