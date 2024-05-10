@@ -682,12 +682,26 @@
 (defun calc-vel (cano)
     (cond
         ((= cano 1) ; Si es el cano esquerre
-            (putprop 'bala-esq (get 'bala-esq 'vix) 'vix)
+            (putprop 'bala-esq (calc-velx cano) 'vix)
             (putprop 'bala-esq (calc-vely cano) 'viy))
 
         ((= cano 0) ; Si es el cano dret
-            (putprop 'bala-dr (get 'bala-esq 'vix) 'vix)
+            (putprop 'bala-dr (calc-velx cano) 'vix)
             (putprop 'bala-dr (calc-vely cano) 'viy))
+        (t
+            (format t "Cano no reconegut."))
+    )
+)
+
+(defun calc-velx (cano)
+    (cond
+        ((= cano 1) ; Si es el cano esquerre
+            (+ (get 'bala-esq 'vix) (* (get 'vent 'vent) 
+                (get 'bala-esq 'temps))))
+
+        ((= cano 0) ; Si es el cano dret
+            (+ (get 'bala-esq 'vix) (* (get 'vent 'vent) 
+                (get 'bala-dr 'temps))))
         (t
             (format t "Cano no reconegut."))
     )
