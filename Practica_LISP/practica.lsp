@@ -8,11 +8,13 @@
 ; FUNCIÓ INICIAL
 (defun inici ()
     (inici-objectes)
+    (menu)
     (repeteix)
 )
 
 ; INICIALITZACIÓ D'OBJECTES
 (defun inici-objectes ()
+    (inici-joc)
     (inici-camp)
     (inici-mur)
     (inici-campesquerre)
@@ -21,6 +23,11 @@
     (inici-canodret)
     (inici-vent)
     (inici-bandera)
+)
+
+(defun inici-joc()
+    (putprop 'joc (numero-aleatori 0 1) 'torn)  ; 1 = cano esquerre, 0 = canó dret
+    (putprop 'joc 0 'acabat)    ; 0 = no acabat, 1 = acabat
 )
 
 ; INICIALITZAM CAMP
@@ -108,6 +115,82 @@
     (putprop 'bandera 20 'pal)
     (putprop 'bandera 20 'amplada)
     (putprop 'bandera 10 'altura)
+)
+
+;************************ MENU ************************************
+
+(defun menu()
+    (cls)   ; natejam la pantalla
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (princ "                          BENVINGUTS AL JOC DELS CANONS")
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (princ "                            Practica realitzada per:")
+    (terpri)
+    (terpri)
+    (princ "                              Jordi Florit Ensenyat")
+    (terpri)
+    (terpri)
+    (princ "                           Josep Gabriel Fornes Reynes")
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (princ "                    Pitja qualsevol tecla per iniciar el joc")
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (setq tecla (get-key))
+)
+
+;************************ INSTRUCCIONS ************************************
+
+(defun instruccions()
+    (cls)   ; natejam la pantalla
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (princ "                          BENVINGUTS AL JOC DELS CANONS")
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (princ "                            Practica realitzada per:")
+    (terpri)
+    (terpri)
+    (princ "                              Jordi Florit Ensenyat")
+    (terpri)
+    (terpri)
+    (princ "                           Josep Gabriel Fornes Reynes")
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (princ "                    Pitja qualsevol tecla per iniciar el joc")
+    (terpri)
+    (terpri)
+    (terpri)
+    (terpri)
+    (setq tecla (get-key))
+    (cond ((equal tecla 32) ; Pitjam espai
+                    (repeteix)) ; incrementa angle cano esquerre i repeteix
+            (t                 ; altrament
+                (terpri) (instruccions)))
 )
 
 ;************************ PINTAM ************************************
@@ -242,49 +325,72 @@
 ;************************ REPETICIÓ ************************************
 
 (defun repeteix ()
-    (pinta)
-    (princ "Pitja fletxa cap amunt o cap avall o ESC.")
-    (terpri)
-    (setq tecla (get-key))
-            ; CANO ESQUERRE
-    (cond ((equal tecla 119) ; Pitjam w
-                (inc-angle-canons 1) (repeteix)) ; incrementa angle cano esquerre i repeteix
-            ((equal tecla 115) ; Pitja s
-                (dec-angle-canons 1) (repeteix)) ; decrementa angle cano esquerre i repeteix
-            ((equal tecla 102) ; Pitja f
-                (dispara-canons 1)) ; dispara canó esquerre
-            ((equal tecla 101) ; Pitja e
-                (aug-potencia-canons 1) (repeteix)) ; incrementam potència canó esquerre
-            ((equal tecla 113) ; Pitja q
-                (dis-potencia-canons 1) (repeteix)) ; decrementam potència canó esquerre
-            ((equal tecla 97) ; Pitja a
-                (moure-esquerre-canons 1) (repeteix)) ; movem canó esquerre cap esquerre
-            ((equal tecla 100) ; Pitja d
-                (moure-dreta-canons 1) (repeteix)) ; movem canó esquerre cap dreta
-            
-            ; CANO DRETA
-            ((equal tecla 105) ; Pitja i
-                (inc-angle-canons 0) (repeteix)) ; incrementa angle cano dret i repeteix
-            ((equal tecla 107) ; Pitja k
-                (dec-angle-canons 0) (repeteix)) ; decrementa angle cano dret i repeteix
-            ((equal tecla 104) ; Pitja h
-                (dispara-canons 0)) ; dispara canó dret
-            ((equal tecla 117) ; Pitja u
-                (aug-potencia-canons 0) (repeteix)) ; incrementam potència canó dret
-            ((equal tecla 111) ; Pitja o
-                (dis-potencia-canons 0) (repeteix)) ; decrementam potència canó dret
-            ((equal tecla 106) ; Pitja j
-                (moure-esquerre-canons 0) (repeteix)) ; movem canó esquerre cap dret
-            ((equal tecla 108) ; Pitja l
-                (moure-dreta-canons 0) (repeteix)) ; movem canó dret cap dreta
+    (cond ((= (get 'joc 'acabat) 0)
+                (pinta)
+                (cond ((= (get 'joc 'torn) 0)   ; torn cano dret 
+                            (princ "Es el torn del cano dret. "))  
+                        (t (princ "Es el torn del cano esquerre. "))   ; torn cano esquerre 
+                )
+                (princ "Pitja ESC per sortir o ")
+                (princ "Espai per veure les instruccions")
+                (terpri)
+                (setq tecla (get-key))
+                        ; CANO ESQUERRE
+                (cond ((equal tecla 119) ; Pitjam w
+                            (inc-angle-canons 1) (repeteix)) ; incrementa angle cano esquerre i repeteix
+                        ((equal tecla 115) ; Pitja s
+                            (dec-angle-canons 1) (repeteix)) ; decrementa angle cano esquerre i repeteix
+                        ((equal tecla 102) ; Pitja f
+                            (cond ((= (get 'joc 'torn) 1)
+                                        (dispara-canons 1))   ; dispara canó esquerre 
+                                    (t (format t "No és el teu torn")
+                                        (terpri)
+                                        (sleep 2)
+                                        (repeteix))
+                            )) 
+                        ((equal tecla 101) ; Pitja e
+                            (aug-potencia-canons 1) (repeteix)) ; incrementam potència canó esquerre
+                        ((equal tecla 113) ; Pitja q
+                            (dis-potencia-canons 1) (repeteix)) ; decrementam potència canó esquerre
+                        ((equal tecla 97) ; Pitja a
+                            (moure-esquerre-canons 1) (repeteix)) ; movem canó esquerre cap esquerre
+                        ((equal tecla 100) ; Pitja d
+                            (moure-dreta-canons 1) (repeteix)) ; movem canó esquerre cap dreta
+                        
+                        ; CANO DRETA
+                        ((equal tecla 105) ; Pitja i
+                            (inc-angle-canons 0) (repeteix)) ; incrementa angle cano dret i repeteix
+                        ((equal tecla 107) ; Pitja k
+                            (dec-angle-canons 0) (repeteix)) ; decrementa angle cano dret i repeteix
+                        ((equal tecla 104) ; Pitja h
+                            (cond ((= (get 'joc 'torn) 0)
+                                        (dispara-canons 0))  ; dispara canó dret 
+                                    (t (format t "No és el teu torn")
+                                        (terpri)
+                                        (sleep 2)
+                                        (repeteix))
+                            ))
+                        ((equal tecla 117) ; Pitja u
+                            (aug-potencia-canons 0) (repeteix)) ; incrementam potència canó dret
+                        ((equal tecla 111) ; Pitja o
+                            (dis-potencia-canons 0) (repeteix)) ; decrementam potència canó dret
+                        ((equal tecla 106) ; Pitja j
+                            (moure-esquerre-canons 0) (repeteix)) ; movem canó esquerre cap dret
+                        ((equal tecla 108) ; Pitja l
+                            (moure-dreta-canons 0) (repeteix)) ; movem canó dret cap dreta
 
-            ; ACABA EL JOC
-            ((equal tecla 27)  ; ESC
-                "Gràcies per jugar")    ; acaba la recursió
-                
-            ; TECLA NO RECONEGUDA
-            (t                 ; altrament
-                (repeteix))))           ; repeteix
+                        ; INSTRUCCIONS
+                        ((equal tecla 32)  ; ESPAI
+                            (instruccions))
+
+                        ; ACABA EL JOC
+                        ((equal tecla 27)  ; ESC
+                            "Gràcies per jugar")    ; acaba la recursió
+                            
+                        ; TECLA NO RECONEGUDA
+                        (t                 ; altrament
+                            (repeteix))))           ; repeteix
+            (t "Gràcies per jugar")))
 
 
 ; *************************** ACCIONS TECLES *********************************
@@ -488,12 +594,18 @@
 )
 
 (defun esperar-entrada ()
-  (format t "Pitja la tecla espai per continuar")
-  (setq tecla (get-key))
-  (cond ((equal tecla 32) ; Pitjam w
-                (repeteix)) ; incrementa angle cano esquerre i repeteix
-          (t                 ; altrament
-           (terpri) (esperar-entrada)))
+    (cond ((= (get 'joc 'acabat) 0)
+                (format t "Pitja la tecla espai per continuar")
+                (setq tecla (get-key))
+                (cond ((equal tecla 32) ; Pitjam espai
+                                (cond ((= (get 'joc 'torn) 0)   ; torn cano dret 
+                                            (putprop 'joc 1 'torn))  
+                                        (t (putprop 'joc 0 'torn))   ; torn cano esquerre 
+                                )
+                                (repeteix)) ; incrementa angle cano esquerre i repeteix
+                        (t                 ; altrament
+                        (terpri) (esperar-entrada))))
+            (t (repeteix)))
 )
 
 (defun cercle (x y radi segments)
@@ -536,6 +648,7 @@
                 (cond ((and (>= (get 'bala-esq 'Y) (get 'campdr 'altura)) 
                             (<= (get 'bala-esq 'Y) (+ (get 'campdr 'altura) 
                                 (get 'canodr 'altura))))
+                                (putprop 'joc 1 'acabat)
                                 (format t "Victoria del cano esquerre")
                                 (terpri))
                             (t (colisio-campdret cano))))
@@ -549,6 +662,7 @@
                 (cond ((and (>= (get 'bala-dr 'Y) (get 'campesq 'altura)) 
                             (<= (get 'bala-dr 'Y) (+ (get 'campesq 'altura) 
                                 (get 'canoesq 'altura))))
+                                (putprop 'joc 1 'acabat)
                                 (format t "Victoria del cano dret")
                                 (terpri))
                             (t (colisio-campdret cano))))
