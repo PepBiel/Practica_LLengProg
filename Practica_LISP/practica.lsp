@@ -121,6 +121,7 @@
 
 (defun menu()
     (cls)   ; natejam la pantalla
+    (color 0 0 0)   ; color  negre
     (terpri)
     (terpri)
     (terpri)
@@ -157,6 +158,7 @@
 
 (defun instruccions()
     (cls)   ; natejam la pantalla
+    (color 0 0 0)   ; color  negre
     (princ "A continuacio us explicarem les principals instruccions ")
     (princ "que s'han de saber abans de començar a jugar:")
     (terpri)
@@ -836,7 +838,7 @@
                 (get 'bala-esq 'temps))))
 
         ((= cano 0) ; Si es el cano dret
-            (+ (get 'bala-esq 'vix) (* (get 'vent 'vent) 
+            (+ (get 'bala-dr 'vix) (* (get 'vent 'vent) 
                 (get 'bala-dr 'temps))))
         (t
             (format t "Cano no reconegut."))
@@ -880,7 +882,7 @@
             (get 'bala-esq 'temps))))
 
         ((= cano 0) ; Si es el cano dret
-            (- (get 'bala-dr 'X) (* (get 'bala-dr 'vix) 
+            (+ (get 'bala-dr 'X) (* (get 'bala-dr 'vix) 
             (get 'bala-dr 'temps))))
         (t
             (format t "Cano no reconegut."))
