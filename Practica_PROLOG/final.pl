@@ -1,6 +1,10 @@
 % ?- ciutats([2,2,1,3], [3,1,3,2], [3,1,2,2], [2,3,1,2], [F1,F2,F3,F4]).
 
-ciutats(CL, CR, FH, FL, L) :- files(CL, CR, L), transposta(L, Trans), files(FH, FL, Trans).
+% ciutats([], [], [], [], []).
+ciutats(CL, CR, FH, FL, L) :- arrayPermutacio(L, A, 0), files(CL, CR, L), transposta(L, Trans), files(FH, FL, Trans).
+
+arrayPermutacio([], [], _).
+arrayPermutacio(L, A, N) :- N is N1 + 1, 
 
 
 files([], [], []).
@@ -38,7 +42,6 @@ insereix(E,[X|Y],[X|Z]) :- insereix(E,Y,Z).
 
 % INVERTIM
 invertir([],[]).
-invertir([X], [X]).
 invertir([X | L1], L2) :- invertir(L1, L3), afegir(L3, [X], L2).
 
 % AFEGIM
