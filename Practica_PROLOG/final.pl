@@ -1,18 +1,25 @@
 % ?- ciutats([2,2,1,3], [3,1,3,2], [3,1,2,2], [2,3,1,2], [F1,F2,F3,F4]).
 
 % ciutats([], [], [], [], []).
-ciutats(CL, CR, FH, FL, L) :- arrayPermutacio(L, A, 0), files(CL, CR, L), transposta(L, Trans), files(FH, FL, Trans).
+ciutats(CL, CR, FH, FL, L) :- arrayPermutacio(L, A), files(CL, CR, L, A), transposta(L, Trans), files(FH, FL, Trans, A).
 
-arrayPermutacio([], [], _).
-arrayPermutacio(L, A, N) :- N is N1 + 1, 
+arrayPermutacio(L, Res) :-
+    length(L, N),
+    llista(1, N, Res).
+
+llista(Final, Final, [Final]) :- !.
+llista(Inici, Final, [Inici | Resta]) :-
+    Inici < Final,
+    Seguent is Inici + 1,
+    llista(Seguent, Final, Resta).
 
 
-files([], [], []).
-files([X | F1], [Y | F2], [R | L1]) :- permuta([1, 2, 3, 4], R), 
+files([], [], [], _).
+files([X | F1], [Y | F2], [R | L1], A) :- permuta(A, R), 
                                         comprova(X, R), 
                                         invertir(R, T), 
                                         comprova(Y, T), 
-                                        files(F1, F2, L1).
+                                        files(F1, F2, L1, A).
 
 comprova(X, R) :- contar(R, N, 0), X = N.
 
