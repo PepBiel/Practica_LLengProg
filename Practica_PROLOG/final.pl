@@ -29,14 +29,24 @@ contar([X | L1], N, I) :- I < X, I \= X, contar(L1, N1, X), N is N1 + 1.
 contar([X | L1], N, I) :- I > X, I \= X, contar(L1, N, I).
 
 
-transposta([], []).
-transposta([F | F1], T) :- transposta(F, [F | F1], T). 
+%transposta([], []).
+%transposta([F | F1], T) :- transposta(F, [F | F1], T). 
 
-transposta([], _, []).
-transposta([_ | F1], M, [C | T]) :- columna(M, C, M1), transposta(F1, M1, T).
+%transposta([], _, []).
+%transposta([_ | F1], M, [C | T]) :- columna(M, C, M1), transposta(F1, M1, T).
 
-columna([], [], []).
-columna([[X | F] | F1], [X | C], [F | F2]) :- columna(F1, C, F2).
+%columna([], [], []).
+%columna([[X | F] | F1], [X | C], [F | F2]) :- columna(F1, C, F2).
+
+transposta([[]|_], []).
+transposta(L1,[L3|L5]):-agafaPrimers(L1,L3), agafaDarrers(L1,L4), 
+                                                transposta(L4,L5). 
+
+agafaPrimers([],[]).
+agafaPrimers([[X|L1]|L2],[X|L3]):-agafaPrimers(L2,L3).
+
+agafaDarrers([],[]).
+agafaDarrers([[X|L1]|L2],[L1|L3]):-agafaDarrers(L2,L3).
 
 
 % PERMUTA
