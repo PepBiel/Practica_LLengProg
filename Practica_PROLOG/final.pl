@@ -3,17 +3,19 @@
 % ciutats([], [], [], [], []).
 ciutats(CL, CR, FH, FL, L) :- arrayPermutacio(L, A), files(CL, CR, L, A), transposta(L, Trans), files(FH, FL, Trans, A).
 
+% predicat per generar l'array de permutacions per a les possibles solucions
 arrayPermutacio(L, Res) :-
     length(L, N),
     llista(1, N, Res).
 
+% retorna una llista amb valors entre el valor inicial i el final
 llista(Final, Final, [Final]) :- !.
 llista(Inici, Final, [Inici | Resta]) :-
     Inici < Final,
     Seguent is Inici + 1,
     llista(Seguent, Final, Resta).
 
-
+% ens pasen dues llistes inicials i generam les possibles solucions, primer per la primera llista i llavors per la segona
 files([], [], [], _).
 files([X | F1], [Y | F2], [R | L1], A) :- permuta(A, R), 
                                         comprova(X, R), 
@@ -21,6 +23,8 @@ files([X | F1], [Y | F2], [R | L1], A) :- permuta(A, R),
                                         comprova(Y, T), 
                                         files(F1, F2, L1, A).
 
+% comprovam que el valor que ens pasen en el primer element coincideix amb el nombre d'edificis que hem detectat que es veuen.
+% SI coincideixen és correcte la solucio, sino no ho es.
 comprova(X, R) :- contar(R, N, 0), X = N.
 
 % mirar quants edificis es veuen
@@ -28,16 +32,7 @@ contar([], 0, _).
 contar([X | L1], N, I) :- I < X, I \= X, contar(L1, N1, X), N is N1 + 1.
 contar([X | L1], N, I) :- I > X, I \= X, contar(L1, N, I).
 
-
-%transposta([], []).
-%transposta([F | F1], T) :- transposta(F, [F | F1], T). 
-
-%transposta([], _, []).
-%transposta([_ | F1], M, [C | T]) :- columna(M, C, M1), transposta(F1, M1, T).
-
-%columna([], [], []).
-%columna([[X | F] | F1], [X | C], [F | F2]) :- columna(F1, C, F2).
-
+% feim la transposta de la matriu que ens passen
 transposta([[]|_], []).
 transposta(L1,[L3|L5]):-agafaPrimers(L1,L3), agafaDarrers(L1,L4), 
                                                 transposta(L4,L5). 
@@ -53,7 +48,7 @@ agafaDarrers([[X|L1]|L2],[L1|L3]):-agafaDarrers(L2,L3).
 permuta([],[]).
 permuta([X|Y],Z) :- permuta(Y,L), insereix(X,L,Z).
 
-% INCEREIX
+% INSEREIX
 insereix(E,L,[E|L]).
 insereix(E,[X|Y],[X|Z]) :- insereix(E,Y,Z).
 
@@ -62,5 +57,5 @@ invertir([],[]).
 invertir([X | L1], L2) :- invertir(L1, L3), afegir(L3, [X], L2).
 
 % AFEGIM
-afegir([], L, L).   %afegir una llista buida a una llista, el resultat es la llista igual
+afegir([], L, L).
 afegir([X | L1], L2, [X | L3]) :- afegir(L1, L2, L3).

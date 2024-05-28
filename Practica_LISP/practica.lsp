@@ -104,10 +104,12 @@
     (putprop 'canodr 0 'Y) ; posició en Y de la punta final del canó
 )
 
+; INICIALITZAM EL VENT
 (defun inici-vent ()
     (putprop 'vent (- (numero-aleatori 0 10) 5) 'vent)
 )
 
+; INICIALITZAM LA BANDERA
 (defun inici-bandera ()
     (putprop 'bandera (+ (get 'campesq 'amplada) 
                         (floor (/ (get 'mur 'amplada) 2))) 'posicioX)
@@ -119,6 +121,9 @@
 
 ;************************ MENU ************************************
 
+; MOSTRAM MENU PRINCIPAL
+; sols mostram per pantalla un text per indicar el titol i els 
+; membres que han realitzat aquesta pràctica
 (defun menu()
     (cls)   ; natejam la pantalla
     (color 0 0 0)   ; color  negre
@@ -156,6 +161,7 @@
 
 ;************************ INSTRUCCIONS ************************************
 
+; MENU QUE MOSTRA LES INDICACIONS/INSTRUCCIONS DEL JOC
 (defun instruccions()
     (cls)   ; natejam la pantalla
     (color 0 0 0)   ; color  negre
@@ -211,7 +217,7 @@
     (princ "Pitja ESPAI per tornar al joc.")
     (setq tecla (get-key))
     (cond ((equal tecla 32) ; Pitjam espai
-                    (repeteix)) ; incrementa angle cano esquerre i repeteix
+                    (repeteix))
             (t                 ; altrament
                 (terpri) (instruccions)))
 )
@@ -290,12 +296,14 @@
         (get 'canodr 'potencia) (get 'canodr 'angle) 0)
 )
 
+; PINTAM PAL DE LA BANDERA
 (defun pinta-pal ()
     (move (get 'bandera 'posicioX) (get 'bandera 'posicioY))
     (draw (get 'bandera 'posicioX) (+ (get 'bandera 'posicioY) 
                                     (get 'bandera 'pal)))
 )
 
+; PINTAM LA BANDERA
 (defun pinta-bandera()
     (cond
         ((= (get 'vent 'vent) 0) ; Si el vent és 0
@@ -316,6 +324,9 @@
     
 )
 
+; SECCIONAM LA BANDERA
+; cal dir que per visualitzar la quantitat de vent s'ha de mirar a la bandera i contar 
+; el nombre de pals de color negre que hi ha dintre de la bandera
 (defun secciona-bandera (n x y)
     (cond ((= n 0) nil)
             ((> n 0) 
@@ -341,12 +352,16 @@
 
 ;************************ NOMBRE ALEATORI ************************************
 
+; GENERAM UN NOMBRE ALEATORI ENTRE MINIM I MAXIM
 (defun numero-aleatori (minim maxim)
     (+ minim (random (+ 1 (- maxim minim))))
 )
 
 ;************************ REPETICIÓ ************************************
 
+; FUNCIO REPETEIX
+; és una de les funcions més importants del joc. Aqui miram si es 
+; pulsa alguna tecla i es fa les funcions pertinents
 (defun repeteix ()
     (cond ((= (get 'joc 'acabat) 0)
                 (pinta)
@@ -545,21 +560,20 @@
      (format t "Cano no reconegut."))
   ))
 
+; FUNCIO QUE PASSA DE GRAUS A RADIANS
 (defun radians (graus)
   (/ (* graus (* 2 pi)) 360))
 
+; DIBUIXA AMB LES COORDENADES ARRODONIDES
 (defun drawr (x y)
   "pinta a les coordenades arrodonides"
   (draw (round x) 
         (round y)))
 
-;1. vix i viy (velocitats inicials) NO RECURSIU
-;2. Entrar bucle recursiu 
-;3. Calcula -> velocitats (depen de les anteriors) i posicions (depen de les anteriors)
-;4. Dibuixa -> segons posicions bala
-;5. Mirar aturada -> si no colisiona tornar a 2 si coliona sortir.
+; *************************** ACCIONS CANONS *********************************
+
+; DISPARAM CANO
 (defun dispara-canons (cano)
-    ;(move (round (get 'canoesq 'X)) (round (get 'canodr 'X)))
     (ini-bala cano)
     (bucle cano)
     (dibuixar-bolla cano))
