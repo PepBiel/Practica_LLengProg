@@ -1,6 +1,30 @@
-% ?- ciutats([2,2,1,3], [3,1,3,2], [3,1,2,2], [2,3,1,2], [F1,F2,F3,F4]).
+% **************************************************************
+% ************************ PRÀCTICA LISP ***********************
+% **************************************************************
 
-% ciutats([], [], [], [], []).
+% ************************ AUTORS ***********************
+
+% Jordi Florit Ensenyat
+% Josep Gabriel Fornes Reynes
+
+% ************************ OBJECTIUS ***********************
+
+% ?- ciutats([2,1], [1,2], [2,1], [1,2], [F1,F2])
+% ?- ciutats([2,1,2], [1,2,2], [3,1,2], [2,2,1], [F1,F2,F3]). EXEMPLE ERRONI
+% L'exemple anterior és erroni, ja que ens diu que a la part superior es veuen 3 edificis(la columna hauria de ser [1, 2, 3]) 
+% i a la part inferior ens diu que s'han de veure 2 edificis, cosa que és impossible, ja que el primer edifici és d'altura
+% 3, i sols es veuria 1 edifici.
+% ?- ciutats([3,1,2], [1,2,2], [3,1,2], [2,1,3], [F1,F2,F3]).
+% ?- ciutats([2,2,1,3], [3,1,3,2], [3,1,2,2], [2,3,1,2], [F1,F2,F3,F4]).
+% ?- ciutats([5,4,2,2,1], [1,2,2,2,4], [4,3,3,2,1], [1,2,3,2,3], [F1,F2,F3,F4,F5]).
+% Per poder veure totes les solucions podem insertar aquests objectius
+% ?- ciutats(A, B, C, D, [F1,F2]).
+% ?- ciutats(A, B, C, D, [F1,F2,F3]).
+% ?- ciutats(A, B, C, D, [F1,F2,F3,F4]).
+% ?- ciutats(A, B, C, D, [F1,F2,F3,F4,F5]). TARDARÀ BASTANT, PERÒ FUNCIONA
+
+% ************************ INICI ***********************
+
 ciutats(CL, CR, FH, FL, L) :- arrayPermutacio(L, A), files(CL, CR, L, A), transposta(L, Trans), files(FH, FL, Trans, A).
 
 % predicat per generar l'array de permutacions per a les possibles solucions
@@ -38,10 +62,10 @@ transposta(L1,[L3|L5]):-agafaPrimers(L1,L3), agafaDarrers(L1,L4),
                                                 transposta(L4,L5). 
 
 agafaPrimers([],[]).
-agafaPrimers([[X|L1]|L2],[X|L3]):-agafaPrimers(L2,L3).
+agafaPrimers([[X|_]|L2],[X|L3]):-agafaPrimers(L2,L3).
 
 agafaDarrers([],[]).
-agafaDarrers([[X|L1]|L2],[L1|L3]):-agafaDarrers(L2,L3).
+agafaDarrers([[_|L1]|L2],[L1|L3]):-agafaDarrers(L2,L3).
 
 
 % PERMUTA
