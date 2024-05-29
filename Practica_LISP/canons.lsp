@@ -2,11 +2,15 @@
 ;************************ PRÀCTICA LISP ***********************
 ;**************************************************************
 
+; *************************** AUTORS ****************************
+
+; Jordi Florit Ensenyat
+; Josep Gabriel Fornés Reynés
 
 ;********************* INICIALITZACIONS *************************
 
 ; FUNCIÓ INICIAL
-(defun inici ()
+(defun inicia ()
     (inici-objectes)
     (menu)
     (repeteix)
@@ -961,4 +965,4 @@
     ((> (get-internal-real-time) endtime))))
 
 ;Crida per iniciar el programa
-(inici)
+(inicia)
