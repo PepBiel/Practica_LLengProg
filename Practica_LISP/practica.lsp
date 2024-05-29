@@ -574,20 +574,30 @@
 
 ; DISPARAM CANO
 (defun dispara-canons (cano)
+    ; Inicialitza els paràmetres de la bala per al canó especificat
     (ini-bala cano)
+    ; Inicia el bucle principal de moviment de la bala
     (bucle cano)
+    ; Dibuixa la trajectòria de la bala
     (dibuixar-bolla cano))
 
 (defun bucle (cano)
+    ;Calcula les noves posicions i velocitats de la bala
     (calcular cano)
+    ; Dibuixa la nova posició de la bala
     (dibuixar cano)
+    ; Verifica col·lisions i altres condicions per aturar la bala
     (aturada cano)
 )
 
 (defun calcular (cano)
+    ; Pausa breument per permetre una animació suau
     (sleep 0.0001)
+    ; Calcula la nova velocitat de la bala
     (calc-vel cano)
+    ; Calcula la nova posició de la bala
     (calc-pos cano)
+    ; Incrementa el temps de vol de la bala
     (inc-temps cano)
 )
 
@@ -633,6 +643,7 @@
 
 (defun esperar-entrada ()
     (cond ((= (get 'joc 'acabat) 0)
+                ; Mostra un missatge indicant a l'usuari que premi la tecla espai per continuar
                 (format t "Pitja la tecla espai per continuar")
                 (setq tecla (get-key))
                 (cond ((equal tecla 32) ; Pitjam espai
@@ -642,27 +653,29 @@
                                 )
                                 (repeteix)) ; incrementa angle cano esquerre i repeteix
                         (t                 ; altrament
+                        ; Si es prem una altra tecla, tornar a esperar l'entrada
                         (terpri) (esperar-entrada))))
+            ; Si el joc ha acabat, repeteix
             (t (repeteix)))
 )
 
 (defun cercle (x y radi segments)
     (mover (+ x radi) y)
-    (cercle2 x y radi (/ 360 segments) 0))
+    (cercle2 x y radi (/ 360 segments) 0)) ; Dibuixa el cercle mitjançant segments
 
 (defun cercle2 (x y radi pas angle)
   (cond ((< angle 360)
          (drawr (+ x (* radi (cos (radians (+ angle pas)))))
                 (+ y (* radi (sin (radians (+ angle pas))))))
-         (cercle2 x y radi pas (+ angle pas)))
+         (cercle2 x y radi pas (+ angle pas))) ; Crida recursiva per al següent segment
         (t t)))
 
-(defun mover (x y)
+(defun mover (x y) ; Mou el cursor a la posició arrodonida especificada
   "mou a les coordenades arrodonides"
   (move (round x) 
         (round y)))
 
-(defun drawr (x y)
+(defun drawr (x y)  ; Pinta un punt a la posició arrodonida especificada
   "pinta a les coordenades arrodonides"
   (draw (round x) 
         (round y)))
@@ -670,9 +683,11 @@
 (defun aturada (cano)
     (cond
         ((= cano 1) ; Si es el cano esquerre
+            ; Verifica col·lisió amb el canó dret
             (colisio-canodret cano))
 
         ((= cano 0) ; Si es el cano dret
+            ; Verifica col·lisió amb el canó esquerre
             (colisio-canoesquerre cano))
         (t
             (format t "Cano no reconegut."))
@@ -686,9 +701,11 @@
                 (cond ((and (>= (get 'bala-esq 'Y) (get 'campdr 'altura)) 
                             (<= (get 'bala-esq 'Y) (+ (get 'campdr 'altura) 
                                 (get 'canodr 'altura))))
+                                ; Si hi ha col·lisió, marca el joc com acabat i mostra el missatge de victòria
                                 (putprop 'joc 1 'acabat)
                                 (format t "Victoria del cano esquerre")
                                 (terpri))
+                             ; Si no hi ha col·lisió amb el canó dret, verifica col·lisió amb el camp dret
                             (t (colisio-campdret cano))))
         (t (colisio-campdret cano)))
 )
@@ -700,9 +717,11 @@
                 (cond ((and (>= (get 'bala-dr 'Y) (get 'campesq 'altura)) 
                             (<= (get 'bala-dr 'Y) (+ (get 'campesq 'altura) 
                                 (get 'canoesq 'altura))))
+                                ; Si hi ha col·lisió, marca el joc com acabat i mostra el missatge de victòria
                                 (putprop 'joc 1 'acabat)
                                 (format t "Victoria del cano dret")
                                 (terpri))
+                            ; Si no hi ha col·lisió amb el canó esquerre, verifica col·lisió amb el camp dret    
                             (t (colisio-campdret cano))))
         (t (colisio-campdret cano)))
 )
@@ -712,12 +731,12 @@
         ((= cano 1) ; Si es el cano esquerre
             (cond ((and (> (get 'bala-esq 'X) (get 'campdr 'posicio-campdr)) 
                         (< (get 'bala-esq 'Y) (get 'campdr 'altura))))
-            (t (colisio-mur cano))))
+            (t (colisio-mur cano)))) ;Si no hi ha col·lisió amb el camp dret, verifica col·lisió amb mur  
 
         ((= cano 0) ; Si es el cano dret
             (cond ((and (> (get 'bala-dr 'X) (get 'campdr 'posicio-campdr)) 
                         (< (get 'bala-dr 'Y) (get 'campdr 'altura))))
-            (t (colisio-mur cano))))
+            (t (colisio-mur cano)))) ;Si no hi ha col·lisió amb el camp dret, verifica col·lisió amb mur  
         (t
             (format t "Cano no reconegut."))
     ) 
@@ -731,7 +750,9 @@
                             (get 'campdr 'posicio-campdr)))
                                 (cond ((<= (get 'bala-esq 'Y) 
                                     (get 'mur 'altura)))
+                                        ; Si hi ha col·lisió amb el mur, continuar en el bucle
                                         (t (bucle cano))))
+                    ;Si no hi ha col·lisió amb el mur, verifica col·lisió amb el camp-esquerra
                     (t (colisio-campesq cano))))
 
         ((= cano 0) ; Si es el cano dret
@@ -740,7 +761,9 @@
                             (get 'campdr 'posicio-campdr)))
                                 (cond ((<= (get 'bala-dr 'Y) 
                                     (get 'mur 'altura)))
+                                        ; Si hi ha col·lisió amb el mur, continuar en el bucle
                                         (t (bucle cano))))
+                    ;Si no hi ha col·lisió amb el mur, verifica col·lisió amb el camp-esquerra
                     (t (colisio-campesq cano))))
         (t
             (format t "Cano no reconegut."))
@@ -781,6 +804,7 @@
     ) 
 )
 
+;Funció per incrementar el temps de vol de la bala
 (defun inc-temps (cano)
     (cond
         ((= cano 1) ; Si es el cano esquerre
@@ -798,21 +822,23 @@
 (defun ini-bala (cano)
     (cond
         ((= cano 1) ; Si es el cano esquerre
+            ;Calcula i estableix la velocitat inicial en el eix X
             (putprop 'bala-esq (* (get 'canoesq 'potencia) 
                 (cos (* (get 'canoesq 'angle) (/ pi 180)))) 'vix)
 
+            ;Calcula i estableix la velocitat inicial en el eix Y
             (putprop 'bala-esq (* (get 'canoesq 'potencia) 
                 (sin (* (get 'canoesq 'angle) (/ pi 180)))) 'viy)
-                
-            (putprop 'bala-esq -9.8 'acceleracio)
-            (putprop 'bala-esq 0 'temps)
-            (putprop 'bala-esq (get 'canoesq 'X) 'X) ;punta vector x
-            (putprop 'bala-esq (get 'canoesq 'Y) 'Y) ;punta vecetor y
-            (putprop 'bala-esq 5 'radi)
-            (putprop 'bala-esq 0 'trajectoria)
-            (mover (get 'bala-esq 'X) (get 'bala-esq 'Y)))
+            
+            (putprop 'bala-esq -9.8 'acceleracio) ;Estableix la acceleració de la bala
+            (putprop 'bala-esq 0 'temps) ;Inicialitzar temps de vol a 0
+            (putprop 'bala-esq (get 'canoesq 'X) 'X) ;Punta vector x
+            (putprop 'bala-esq (get 'canoesq 'Y) 'Y) ;Punta vecetor y
+            (putprop 'bala-esq 5 'radi) ;Radi de la bala
+            (putprop 'bala-esq 0 'trajectoria) ;Inicialitzar trajectoria
+            (mover (get 'bala-esq 'X) (get 'bala-esq 'Y))) ;Moure el cursor a la posicio inicial de la bala
 
-        ((= cano 0) ; Si es el cano dret
+        ((= cano 0) ; Si es el cano dret (inicialitzacio igual que la esquerra)
             (putprop 'bala-dr (* (get 'canodr 'potencia) 
                 (cos (* (get 'canodr 'angle) (/ pi 180)))) 'vix)
 
@@ -831,6 +857,7 @@
     )
 )
 
+;Defineix la nova velocitat de la bala tant per eix X i Y (formules enunciat)
 (defun calc-vel (cano)
     (cond
         ((= cano 1) ; Si es el cano esquerre
@@ -845,6 +872,7 @@
     )
 )
 
+;Funció auxilair per calcular velocitat en el eix X
 (defun calc-velx (cano)
     (cond
         ((= cano 1) ; Si es el cano esquerre
@@ -859,7 +887,7 @@
     )
 )
     
-; falta cano dret
+;Funció auxilair per calcular velocitat en el eix Y
 (defun calc-vely (cano)
     (cond
         ((= cano 1) ; Si es el cano esquerre
@@ -874,6 +902,7 @@
     )
 )
 
+;Defineix la nova posició de la bala tant per eix X i Y (formules enunciat)
 (defun calc-pos (cano)
     (cond
         ((= cano 1) ; Si es el cano esquerre
@@ -888,7 +917,7 @@
     )
 )
 
-; falta cano dret
+;Funció auxilair per calcular posició en el eix X
 (defun calc-posx (cano)
     (cond
         ((= cano 1) ; Si es el cano esquerre
@@ -903,7 +932,7 @@
     )
 )
 
-; falta cano dret
+;Funció auxilair per calcular posició en el eix Y
 (defun calc-posy (cano)
     
     (cond
@@ -923,6 +952,7 @@
     )
 )
 
+;Pausar la execució del programa (aula digital)
 (defun sleep (seconds)
     "Espera la quantitat indicada de segons"
     ; Això és un bucle iteratiu. NO PODEU FER-NE SERVIR ENLLOC MÉS
@@ -930,4 +960,5 @@
     (* seconds internal-time-units-per-second))))
     ((> (get-internal-real-time) endtime))))
 
+;Crida per iniciar el programa
 (inici)
